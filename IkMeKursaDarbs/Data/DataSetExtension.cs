@@ -69,17 +69,18 @@ namespace IkMeKursaDarbs.Data
                 return obj;
             });
         }
-        public static TDataType GetRowAsType<TDataType>(this DataRow row, IdEntity instance=null) where TDataType : IdEntity
+        public static TDataType GetRowAsType<TDataType>(this DataRow row) where TDataType : IdEntity
         {
             // Kešojam izveidotās generic tipu vērtības, tas nepieciešams jo CreateInstance ir salīdzinoši lēns ~17 ms
-            if (instance != null)
-            { 
-                if (!_cachedInstances.TryGetValue(typeof(TDataType).Name, out instance))
-                {
-                    instance = Activator.CreateInstance<TDataType>();
-                    _cachedInstances.Add(typeof(TDataType).Name, instance);
-                }
+            if (!_cachedInstances.TryGetValue(typeof(TDataType).Name, out IdEntity instance))
+            {
+                instance = Activator.CreateInstance<TDataType>();
+                _cachedInstances.Add(typeof(TDataType).Name, instance);
             }
+            return row.GetRowAsType<TDataType>(instance);
+        }
+        public static TDataType GetRowAsType<TDataType>(this DataRow row, IdEntity instance) where TDataType : IdEntity
+        {
             // Klonējam objektu un piepildām vērtības
             TDataType entity = (TDataType)instance.Clone();
             foreach (var prop in typeof(TDataType).GetProperties())
@@ -88,7 +89,7 @@ namespace IkMeKursaDarbs.Data
             }
             return entity;
         }
-        public static TDataType GetRowAsType<TDataType>(this DataRow row, TDataType type) where TDataType : IdEntity => row.GetRowAsType<TDataType>();
+        public static TDataType GetRowAsType<TDataType>(this DataRow row, Type type) where TDataType : IdEntity => row.GetRowAsType<TDataType>(type.Name);
         public static IEnumerable<TDataType> Query<TDataType>(this DataSet set, Func<TDataType, bool> predicate) where TDataType : IdEntity
         {
             var table = set.Tables[typeof(TDataType).Name];
