@@ -10,5 +10,7 @@ namespace IkMeKursaDarbs.Data.Entities
     {
         [Constraint("NOT NULL", "text")]
         public string RoleName { get; set; }
+        [Constraint("NOT NULL")]
+        public int Premissions { get; set; }
     }
 }

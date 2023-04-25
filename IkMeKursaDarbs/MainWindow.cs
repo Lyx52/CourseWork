@@ -25,7 +25,7 @@ namespace IkMeKursaDarbs
                     Tag = new List<ComponentTab>
                     {
                         new ComponentTab("Roles", new RoleManagmentComponent()),
-                        new ComponentTab("Users", new EntityManagmentComponent(typeof(AppUser), "Username"))
+                        new ComponentTab("Users", new UserManagmentComponent())
                     }
                 });
             lstMainMenu.Items.Add(
@@ -43,6 +43,13 @@ namespace IkMeKursaDarbs
         {
             this.mainContainer.Enabled = true;
             this.mainContainer.Visible = true;
+        }
+        public void Logout()
+        {
+            this.mainContainer.Enabled = false;
+            this.mainContainer.Visible = false;
+            UserContext.Logout();
+            UserContext.LoginPrompt(this);
         }
         private void MainWindow_Load(object sender, EventArgs e)
         {

@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
+using IkMeKursaDarbs.Data.Enums;
 namespace IkMeKursaDarbs
 {
     
@@ -44,7 +44,7 @@ namespace IkMeKursaDarbs
             // Izveidot admin lietotāju, ja tāds neēksistē
             if (this.DataSet.Query<UserRole>((role) => role.RoleName == "Administrator").Count() <= 0)
             {
-                this.DataSet.Add(new UserRole() { RoleName = "Administrator" });
+                this.DataSet.Add(new UserRole() { RoleName = "Administrator", Premissions = Enum.GetValues(typeof(RolePremissionType)).Cast<int>().Sum() });
                 this.Update<UserRole>();
             }
 

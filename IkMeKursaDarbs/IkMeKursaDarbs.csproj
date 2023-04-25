@@ -97,17 +97,19 @@
     <Compile Include="Components\ComponentTab.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Components\DataGridViewPasswordColumn.cs" />
+    <Compile Include="Components\EntityRelationComboBoxColumn.cs" />
     <Compile Include="Components\RoleManagmentComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Components\RoleManagmentComponent.Designer.cs">
       <DependentUpon>RoleManagmentComponent.cs</DependentUpon>
     </Compile>
-    <Compile Include="Components\EntityManagmentComponent.cs">
+    <Compile Include="Components\UserManagmentComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Components\EntityManagmentComponent.Designer.cs">
-      <DependentUpon>EntityManagmentComponent.cs</DependentUpon>
+    <Compile Include="Components\UserManagmentComponent.Designer.cs">
+      <DependentUpon>UserManagmentComponent.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\ConnectionExtension.cs" />
     <Compile Include="Data\ConstraintAttribute.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="Data\DbContext.cs" />
     <Compile Include="Data\Entities\AppUser.cs" />
     <Compile Include="Data\Entities\UserRole.cs" />
+    <Compile Include="Data\Enums\RolePremissionType.cs" />
     <Compile Include="Data\IdEntity.cs" />
     <Compile Include="Data\TableRelationAttribute.cs" />
     <Compile Include="LoginForm.cs">
@@ -136,8 +139,8 @@
     <EmbeddedResource Include="Components\RoleManagmentComponent.resx">
       <DependentUpon>RoleManagmentComponent.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\EntityManagmentComponent.resx">
-      <DependentUpon>EntityManagmentComponent.cs</DependentUpon>
+    <EmbeddedResource Include="Components\UserManagmentComponent.resx">
+      <DependentUpon>UserManagmentComponent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>

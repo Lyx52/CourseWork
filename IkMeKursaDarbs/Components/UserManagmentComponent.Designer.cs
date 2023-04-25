@@ -1,6 +1,6 @@
 ﻿namespace IkMeKursaDarbs.Components
 {
-    partial class EntityManagmentComponent
+    partial class UserManagmentComponent
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EntityManagmentComponent));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserManagmentComponent));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.txtSearchbox = new System.Windows.Forms.ToolStripTextBox();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
