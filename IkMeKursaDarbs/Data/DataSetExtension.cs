@@ -15,7 +15,6 @@ namespace IkMeKursaDarbs.Data
     public static class DataSetExtension
     {
         private static Dictionary<string, IdEntity> _cachedInstances { get; set; } = new Dictionary<string, IdEntity>();
-
         public static void Remove<TDataType>(this DataSet set, TDataType value) where TDataType : IdEntity
         {
             var entityToRemove = set.Tables[typeof(TDataType).Name].Select($"Id = ${value.Id}").FirstOrDefault();
@@ -24,22 +23,16 @@ namespace IkMeKursaDarbs.Data
         }
         public static void Add<TDataType>(this DataSet set, TDataType value) where TDataType : IdEntity
         {
+            set.EnforceConstraints = false;
             DataRow row = set.Tables[typeof(TDataType).Name].NewRow();
             foreach (var prop in typeof(TDataType).GetProperties())
             {
-                var relationshipAttribute = prop.GetCustomAttribute<RelationshipAttribute>();
-                if (relationshipAttribute != null)
-                {
-                    IdEntity obj = prop.GetValue(value) as IdEntity;
-                    row[$"{prop.Name}Id"] = obj?.Id;
-                    continue;
-                }
                 row[prop.Name] = prop.GetValue(value) ?? DBNull.Value;
             }
             
             set.Tables[typeof(TDataType).Name].Rows.Add(row);
+            set.EnforceConstraints = true;
         }
-        public static IEnumerable<TDataType> Select<TDataType>(this DataSet set, TDataType type, string filterExpression) where TDataType : IdEntity => set.Select<TDataType>(filterExpression);
         public static IEnumerable<TDataType> Select<TDataType>(this DataSet set, string filterExpression) where TDataType : IdEntity
         {
             var rows = set.Tables[typeof(TDataType).Name].Select(filterExpression);
@@ -48,22 +41,6 @@ namespace IkMeKursaDarbs.Data
                 TDataType obj = (TDataType)Activator.CreateInstance(typeof(TDataType));
                 foreach (var prop in typeof(TDataType).GetProperties())
                 {
-                    var relationshipAttribute = prop.GetCustomAttribute<RelationshipAttribute>();
-                    if (relationshipAttribute != null)
-                    {
-                        // Get relationship obj
-                        int foreignKey = (int)row[$"{prop.Name}Id"];
-
-                        var selectedRows = set.Tables[prop.PropertyType.Name].Select($"Id = {foreignKey}");
-                        // Is a list
-                        if (prop.PropertyType.GetInterface("IEnumerable", true) != null)
-                        {
-                            prop.SetValue(obj, selectedRows.Select(r => r.GetRowAsType(prop.PropertyType.GetGenericArguments()[0].GetType() as object as IdEntity)));
-                        } else
-                        {
-                            prop.SetValue(obj, selectedRows.FirstOrDefault().GetRowAsType());
-                        }
-                    }
                     prop.SetValue(obj, row[prop.Name]);
                 }
                 return obj;
@@ -77,10 +54,6 @@ namespace IkMeKursaDarbs.Data
                 instance = Activator.CreateInstance<TDataType>();
                 _cachedInstances.Add(typeof(TDataType).Name, instance);
             }
-            return row.GetRowAsType<TDataType>(instance);
-        }
-        public static TDataType GetRowAsType<TDataType>(this DataRow row, IdEntity instance) where TDataType : IdEntity
-        {
             // Klonējam objektu un piepildām vērtības
             TDataType entity = (TDataType)instance.Clone();
             foreach (var prop in typeof(TDataType).GetProperties())
@@ -89,7 +62,6 @@ namespace IkMeKursaDarbs.Data
             }
             return entity;
         }
-        public static TDataType GetRowAsType<TDataType>(this DataRow row, Type type) where TDataType : IdEntity => row.GetRowAsType<TDataType>(type.Name);
         public static IEnumerable<TDataType> Query<TDataType>(this DataSet set, Func<TDataType, bool> predicate) where TDataType : IdEntity
         {
             var table = set.Tables[typeof(TDataType).Name];
@@ -105,6 +77,23 @@ namespace IkMeKursaDarbs.Data
                 if (predicate(entity))
                 {
                     yield return entity;
+                }
+            }
+        }
+        public static void AddRelations<TDataType>(this DataSet set) where TDataType : IdEntity
+        {
+            foreach(var prop in typeof(TDataType).GetProperties())
+            {
+                var relation = prop.GetCustomAttribute<TableRelationAttribute>();
+                if (relation != null && set.Tables.Contains(relation.RelatedTo.Name))
+                {
+                    // Parent->Id related to Child->PropertyName
+                    set.Relations.Add(new DataRelation(
+                        $"{relation.RelatedTo.Name}_TO_{typeof(TDataType).Name}",
+                        set.Tables[relation.RelatedTo.Name].Columns["Id"],
+                        set.Tables[typeof(TDataType).Name].Columns[prop.Name],
+                        relation.Constraint
+                    ));
                 }
             }
         }

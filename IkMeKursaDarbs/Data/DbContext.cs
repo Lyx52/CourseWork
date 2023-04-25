@@ -34,21 +34,25 @@ namespace IkMeKursaDarbs
         }
         public async Task Initialize(CancellationToken cancellationToken = default(CancellationToken))
         {
+            // Izveidojam tabulas
             await this.CreateSchema<AppUser>(true, true, cancellationToken);
             await this.CreateSchema<UserRole>(true, true, cancellationToken);
+
+            // Izveidojam relacijas
+            this.DataSet.AddRelations<AppUser>();
+
             // Izveidot admin lietotāju, ja tāds neēksistē
-            /* if (this.DataSet.Query<AppUser>((user) => user.Username == "admin").Count() <= 0)
-             {
-                 this.DataSet.Add(new AppUser() { Password = "parole123", Username = "admin" });
-                 this.Update<AppUser>();
-             }*/
-            if (this.DataSet.Select<AppUser>("Username = 'admin'").Count() <= 0)
+            if (this.DataSet.Query<UserRole>((role) => role.RoleName == "Administrator").Count() <= 0)
             {
                 this.DataSet.Add(new UserRole() { RoleName = "Administrator" });
-                this.DataSet.Add(new UserRole() { RoleName = "Administrator1" });
                 this.Update<UserRole>();
-                var role = this.DataSet.Select<UserRole>("RoleName = 'Administrator1'").FirstOrDefault();
-                this.DataSet.Add(new AppUser() { Password = "parole123", Username = "admin", Role = role });
+            }
+
+            if (this.DataSet.Select<AppUser>("Username IN ('admin', 'tester')").Count() <= 0)
+            {
+                var role = this.DataSet.Select<UserRole>("RoleName = 'Administrator'").FirstOrDefault();
+                this.DataSet.Add(new AppUser() { Password = "parole123".ToSHA256(), Username = "admin", RoleId = role.Id });
+                this.DataSet.Add(new AppUser() { Password = "parole123".ToSHA256(), Username = "tester", RoleId = role.Id });
                 this.Update<AppUser>();
                 this.DataSet.Select<AppUser>("Username = 'admin'").Count();
             }
@@ -61,9 +65,10 @@ namespace IkMeKursaDarbs
             if (fillDataSet)
                 this.Adapters[typeof(TDataType).Name].Fill(DataSet, typeof(TDataType).Name);
         }
-        public void Update<TDataType>() where TDataType: IdEntity
+        public void Update(string tableName)
         {
-            this.Adapters[typeof(TDataType).Name].Update(DataSet.Tables[typeof(TDataType).Name]);
+            this.Adapters[tableName].Update(DataSet.Tables[tableName]);
         }
+        public void Update<TDataType>() where TDataType : IdEntity => Update(typeof(TDataType).Name);
     }
 }

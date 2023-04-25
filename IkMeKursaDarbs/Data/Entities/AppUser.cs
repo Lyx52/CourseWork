@@ -10,9 +10,12 @@ namespace IkMeKursaDarbs.Data.Entities
     {
         [Constraint("NOT NULL", "text")]
         public string Username { get; set; }
+
         [Constraint("NOT NULL", "text")]
         public string Password { get; set; }
-        [Relationship]
-        public UserRole Role { get; set; }
+
+        [Constraint("NOT NULL", "integer")]
+        [TableRelation(typeof(UserRole), false)]
+        public int RoleId { get; set; }
     }
 }

@@ -35,7 +35,6 @@ namespace IkMeKursaDarbs.Data
             throw new ArgumentException($"No Postgres type mapping for type {type}");
         }
         public static string GetPostgresTypeStr(Type type) => GetPostgresType(type).ToString();
-
         public static async Task<NpgsqlDataAdapter> CreateTable<TDataType>(this NpgsqlConnection connection, bool createNewTable = false, CancellationToken cancellationToken = default(CancellationToken)) where TDataType : IdEntity
         {
             await connection.OpenAsync(cancellationToken);
@@ -50,18 +49,8 @@ namespace IkMeKursaDarbs.Data
             var updateParameters = new List<NpgsqlParameter>();
             foreach (var prop in clazz.GetProperties())
             {
-                var relationshipAttribute = prop.GetCustomAttribute<RelationshipAttribute>();
                 // Izdabūt atribūta custom ierbobežojumu/tipu
                 var constraintAttrib = prop.GetCustomAttribute<ConstraintAttribute>();
-                if (relationshipAttribute != null)
-                {
-                    // Piemēram RoleId -> Id
-                    columns.Add($"{prop.Name}Id");
-                    columnsConstraints.Add($"{prop.Name}Id {constraintAttrib?.DataType ?? GetPostgresTypeStr(typeof(int))} {constraintAttrib?.Constraint ?? string.Empty}");
-                    insertParameters.Add(new NpgsqlParameter($"{prop.Name}Id", GetPostgresType(typeof(int)), GetPostgresTypeSize(typeof(int)), $"{prop.Name}Id"));
-                    updateParameters.Add(new NpgsqlParameter($"{prop.Name}Id", GetPostgresType(typeof(int)), GetPostgresTypeSize(typeof(int)), $"{prop.Name}Id"));
-                    continue;
-                }
                 columnsConstraints.Add($"{prop.Name} {constraintAttrib.DataType ?? GetPostgresTypeStr(prop.PropertyType)} {constraintAttrib.Constraint ?? string.Empty}");
                 insertParameters.Add(new NpgsqlParameter(prop.Name, GetPostgresType(prop.PropertyType), GetPostgresTypeSize(prop.PropertyType), prop.Name));
                 updateParameters.Add(new NpgsqlParameter(prop.Name, GetPostgresType(prop.PropertyType), GetPostgresTypeSize(prop.PropertyType), prop.Name));
