@@ -30,9 +30,11 @@
         {
             this.txtRoleName = new System.Windows.Forms.TextBox();
             this.cboxPremissions = new System.Windows.Forms.CheckedListBox();
-            this.btnAddRole = new System.Windows.Forms.Button();
+            this.btnRemove = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lstRoles = new System.Windows.Forms.ListBox();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnAdd = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -43,7 +45,7 @@
             // 
             this.txtRoleName.Location = new System.Drawing.Point(3, 14);
             this.txtRoleName.Name = "txtRoleName";
-            this.txtRoleName.Size = new System.Drawing.Size(344, 20);
+            this.txtRoleName.Size = new System.Drawing.Size(233, 20);
             this.txtRoleName.TabIndex = 0;
             // 
             // cboxPremissions
@@ -52,22 +54,23 @@
             this.cboxPremissions.FormattingEnabled = true;
             this.cboxPremissions.Location = new System.Drawing.Point(0, 0);
             this.cboxPremissions.Name = "cboxPremissions";
-            this.cboxPremissions.Size = new System.Drawing.Size(190, 274);
+            this.cboxPremissions.Size = new System.Drawing.Size(321, 448);
             this.cboxPremissions.TabIndex = 1;
             // 
-            // btnAddRole
+            // btnRemove
             // 
-            this.btnAddRole.Location = new System.Drawing.Point(354, 14);
-            this.btnAddRole.Name = "btnAddRole";
-            this.btnAddRole.Size = new System.Drawing.Size(104, 23);
-            this.btnAddRole.TabIndex = 2;
-            this.btnAddRole.Text = "Add role";
-            this.btnAddRole.UseVisualStyleBackColor = true;
+            this.btnRemove.Location = new System.Drawing.Point(390, 14);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(68, 23);
+            this.btnRemove.TabIndex = 2;
+            this.btnRemove.Text = "Remove";
+            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 43);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 61);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -77,8 +80,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.lstRoles);
-            this.splitContainer1.Size = new System.Drawing.Size(461, 274);
-            this.splitContainer1.SplitterDistance = 190;
+            this.splitContainer1.Size = new System.Drawing.Size(785, 448);
+            this.splitContainer1.SplitterDistance = 321;
             this.splitContainer1.TabIndex = 3;
             // 
             // lstRoles
@@ -87,18 +90,40 @@
             this.lstRoles.FormattingEnabled = true;
             this.lstRoles.Location = new System.Drawing.Point(0, 0);
             this.lstRoles.Name = "lstRoles";
-            this.lstRoles.Size = new System.Drawing.Size(267, 274);
+            this.lstRoles.Size = new System.Drawing.Size(460, 448);
             this.lstRoles.TabIndex = 0;
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Location = new System.Drawing.Point(316, 14);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(68, 23);
+            this.btnUpdate.TabIndex = 4;
+            this.btnUpdate.Text = "Update";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Location = new System.Drawing.Point(242, 14);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(68, 23);
+            this.btnAdd.TabIndex = 5;
+            this.btnAdd.Text = "Add";
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // RoleManagmentComponent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnAdd);
+            this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.btnAddRole);
+            this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.txtRoleName);
             this.Name = "RoleManagmentComponent";
-            this.Size = new System.Drawing.Size(461, 317);
+            this.Size = new System.Drawing.Size(785, 509);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -112,8 +137,10 @@
 
         private System.Windows.Forms.TextBox txtRoleName;
         private System.Windows.Forms.CheckedListBox cboxPremissions;
-        private System.Windows.Forms.Button btnAddRole;
+        private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ListBox lstRoles;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Button btnAdd;
     }
 }

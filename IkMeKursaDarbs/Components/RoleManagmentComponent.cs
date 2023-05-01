@@ -23,33 +23,8 @@ namespace IkMeKursaDarbs.Components
             this.lstRoles.DataSource = Program.DbContext[typeof(UserRole).Name];
             this.lstRoles.DisplayMember = "RoleName";
             this.lstRoles.SelectedIndexChanged += LstRoles_SelectedIndexChanged;
-            this.btnAddRole.Click += BtnAddRole_Click;
         }
 
-        private void BtnAddRole_Click(object sender, EventArgs e)
-        {
-            if (this._selectedRole == null)
-            {
-                // Add new role
-                UserRole role = new UserRole();
-                role.RoleName = this.txtRoleName.Text;
-                role.Premissions = GetSelectedPremissions();
-                Program.DbContext[typeof(UserRole).Name].Rows.Add(role);
-                this.lstRoles.DataSource = Program.DbContext[typeof(UserRole).Name];
-                this.lstRoles.DisplayMember = "RoleName";
-                this.lstRoles.SelectedItem = role;
-            }
-            else
-            {
-                // Update selected role
-                this._selectedRole.RoleName = this.txtRoleName.Text;
-                this._selectedRole.Premissions = GetSelectedPremissions();
-                Program.DbContext.Update<UserRole>();
-                this.lstRoles.DataSource = Program.DbContext[typeof(UserRole).Name];
-                this.lstRoles.DisplayMember = "RoleName";
-                this.lstRoles.SelectedItem = this._selectedRole;
-            }
-        }
         private int GetSelectedPremissions()
         {
             int premissions = 0;
@@ -80,6 +55,34 @@ namespace IkMeKursaDarbs.Components
                 RolePremissionType premissionType = (RolePremissionType)Enum.Parse(typeof(RolePremissionType), cboxPremissions.Items[i].ToString());
                 cboxPremissions.SetItemChecked(i, (_selectedRole.Premissions & (int)premissionType) == (int)premissionType);
             }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            // Add new role
+            UserRole role = new UserRole();
+            role.RoleName = this.txtRoleName.Text;
+            role.Premissions = GetSelectedPremissions();
+            Program.DbContext.DataSet.Add<UserRole>(role);
+            Program.DbContext.Update<UserRole>();
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (this._selectedRole is null) return;
+            // Update role
+            if (!string.IsNullOrEmpty(this.txtRoleName.Text))
+                this._selectedRole.RoleName = this.txtRoleName.Text;
+            this._selectedRole.Premissions = GetSelectedPremissions();
+            Program.DbContext.DataSet.Update<UserRole>(this._selectedRole);
+            Program.DbContext.Update<UserRole>();
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            if (this._selectedRole is null) return;
+            Program.DbContext.DataSet.Remove<UserRole>(this._selectedRole);
+            Program.DbContext.Update<UserRole>();
         }
     }
 }

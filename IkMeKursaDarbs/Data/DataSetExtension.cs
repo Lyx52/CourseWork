@@ -17,10 +17,28 @@ namespace IkMeKursaDarbs.Data
         private static Dictionary<string, IdEntity> _cachedInstances { get; set; } = new Dictionary<string, IdEntity>();
         public static void Remove<TDataType>(this DataSet set, TDataType value) where TDataType : IdEntity
         {
-            var entityToRemove = set.Tables[typeof(TDataType).Name].Select($"Id = ${value.Id}").FirstOrDefault();
+            DataTable table = set.Tables[typeof(TDataType).Name];
+            var entityToRemove = table.Select($"Id = {value.Id}").FirstOrDefault();
             if (entityToRemove is null) return;
-            set.Tables[typeof(TDataType).Name].Rows.Remove(entityToRemove);
+            table.Rows.Remove(entityToRemove);
         }
+        public static void Update<TDataType>(this DataSet set, TDataType value) where TDataType : IdEntity
+        {
+            set.EnforceConstraints = false;
+            DataTable table = set.Tables[typeof(TDataType).Name];
+            DataRow row = table.Select($"Id = {value.Id}").FirstOrDefault();
+            if (row is null) return;
+
+            foreach (var prop in typeof(TDataType).GetProperties())
+            {
+                if (prop.Name != "Id")
+                {
+                    row[prop.Name] = prop.GetValue(value) ?? DBNull.Value;
+                }
+            }
+            set.EnforceConstraints = true;
+        }
+
         public static void Add<TDataType>(this DataSet set, TDataType value) where TDataType : IdEntity
         {
             set.EnforceConstraints = false;
@@ -33,6 +51,27 @@ namespace IkMeKursaDarbs.Data
             set.Tables[typeof(TDataType).Name].Rows.Add(row);
             set.EnforceConstraints = true;
         }
+        public static void AddOrUpdate<TDataType>(this DataSet set, TDataType value) where TDataType : IdEntity
+        {
+            set.EnforceConstraints = false;
+            DataTable table = set.Tables[typeof(TDataType).Name];
+            DataRow row = table.Select($"Id = {value.Id}").FirstOrDefault();
+            if (row == null)
+            {
+                row = table.NewRow();
+                row["Id"] = value.Id;
+                table.Rows.Add(row);
+            }
+            foreach (var prop in typeof(TDataType).GetProperties())
+            {
+                if (prop.Name != "Id")
+                {
+                    row[prop.Name] = prop.GetValue(value) ?? DBNull.Value;
+                }
+            }
+            set.EnforceConstraints = true;
+        }
+
         public static IEnumerable<TDataType> Select<TDataType>(this DataSet set, string filterExpression) where TDataType : IdEntity
         {
             var rows = set.Tables[typeof(TDataType).Name].Select(filterExpression);

@@ -22,9 +22,9 @@ namespace IkMeKursaDarbs
         {
             get => DataSet.Tables[tableName];
         }
-        public DataTable this[Type type]
+        public DataRelation this[string parent, string child]
         {
-            get => DataSet.Tables[typeof(Type).Name];
+            get => DataSet.Relations[$"{parent}_TO_{child}"];
         }
         public DbContext()
         {
@@ -37,9 +37,16 @@ namespace IkMeKursaDarbs
             // Izveidojam tabulas
             await this.CreateSchema<AppUser>(true, true, cancellationToken);
             await this.CreateSchema<UserRole>(true, true, cancellationToken);
+            await this.CreateSchema<Specialization>(true, false, cancellationToken);
+            await this.CreateSchema<Mechanic>(true, false, cancellationToken);
+            await this.CreateSchema<InventoryCategory>(true, false, cancellationToken);
+            await this.CreateSchema<InventoryItem>(true, false, cancellationToken);
 
             // Izveidojam relacijas
             this.DataSet.AddRelations<AppUser>();
+            this.DataSet.AddRelations<Mechanic>();
+            this.DataSet.AddRelations<InventoryItem>();
+            this.DataSet.AddRelations<InventoryCategory>();
 
             // Izveidot admin lietotāju, ja tāds neēksistē
             if (this.DataSet.Query<UserRole>((role) => role.RoleName == "Administrator").Count() <= 0)

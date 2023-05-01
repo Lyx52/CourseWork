@@ -33,7 +33,7 @@ namespace IkMeKursaDarbs.Components
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Program.DbContext.Update(typeof(AppUser).Name);
+            Program.DbContext.Update<AppUser>();
         }
 
         private void txtSearchbox_TextChanged(object sender, EventArgs e)

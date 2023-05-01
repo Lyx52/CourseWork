@@ -12,6 +12,7 @@ namespace IkMeKursaDarbs.Components
         public ComponentTab(string text, UserControl control)
         {
             Text = text;
+            control.Dock = DockStyle.Fill;
             this.Controls.Add(control);
         }
     }
