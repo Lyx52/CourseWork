@@ -1,6 +1,6 @@
 ﻿namespace IkMeKursaDarbs.Components
 {
-    partial class SpecializationManagmentComponent
+    partial class ManufacturerManagmentComponent
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,14 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpecializationManagmentComponent));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ManufacturerManagmentComponent));
+            this.dgwTable = new System.Windows.Forms.DataGridView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.txtSearch = new System.Windows.Forms.ToolStripTextBox();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
-            this.dgwTable = new System.Windows.Forms.DataGridView();
-            this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgwTable)).BeginInit();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // dgwTable
+            // 
+            this.dgwTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgwTable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgwTable.Location = new System.Drawing.Point(0, 0);
+            this.dgwTable.Name = "dgwTable";
+            this.dgwTable.Size = new System.Drawing.Size(622, 494);
+            this.dgwTable.TabIndex = 0;
             // 
             // toolStrip1
             // 
@@ -44,13 +53,14 @@
             this.btnSave});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(670, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(622, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // txtSearch
             // 
             this.txtSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(100, 25);
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
@@ -65,37 +75,28 @@
             this.btnSave.Text = "Save";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // dgwTable
-            // 
-            this.dgwTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgwTable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgwTable.Location = new System.Drawing.Point(0, 25);
-            this.dgwTable.MultiSelect = false;
-            this.dgwTable.Name = "dgwTable";
-            this.dgwTable.Size = new System.Drawing.Size(670, 486);
-            this.dgwTable.TabIndex = 2;
-            // 
-            // SpecializationManagmentComponent
+            // ManufacturerManagmentComponent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.Controls.Add(this.dgwTable);
             this.Controls.Add(this.toolStrip1);
-            this.Name = "SpecializationManagmentComponent";
-            this.Size = new System.Drawing.Size(670, 511);
+            this.Controls.Add(this.dgwTable);
+            this.Name = "ManufacturerManagmentComponent";
+            this.Size = new System.Drawing.Size(622, 494);
+            ((System.ComponentModel.ISupportInitialize)(this.dgwTable)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgwTable)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
+
+        private System.Windows.Forms.DataGridView dgwTable;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripTextBox txtSearch;
         private System.Windows.Forms.ToolStripButton btnSave;
-        private System.Windows.Forms.DataGridView dgwTable;
     }
 }

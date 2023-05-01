@@ -69,10 +69,11 @@
             // dgwTable
             // 
             this.dgwTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgwTable.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dgwTable.Location = new System.Drawing.Point(0, 43);
+            this.dgwTable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgwTable.Location = new System.Drawing.Point(0, 25);
+            this.dgwTable.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.dgwTable.Name = "dgwTable";
-            this.dgwTable.Size = new System.Drawing.Size(720, 454);
+            this.dgwTable.Size = new System.Drawing.Size(720, 472);
             this.dgwTable.TabIndex = 2;
             // 
             // UserManagmentComponent

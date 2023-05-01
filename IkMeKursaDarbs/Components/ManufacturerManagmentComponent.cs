@@ -1,5 +1,4 @@
-﻿using IkMeKursaDarbs.Data;
-using IkMeKursaDarbs.Data.Entities;
+﻿using IkMeKursaDarbs.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,17 +11,16 @@ using System.Windows.Forms;
 
 namespace IkMeKursaDarbs.Components
 {
-    public partial class SpecializationManagmentComponent : UserControl
+    public partial class ManufacturerManagmentComponent : UserControl
     {
         private DataView _view;
-
-        public SpecializationManagmentComponent()
+        public ManufacturerManagmentComponent()
         {
             InitializeComponent();
-            this._view = new DataView(Program.DbContext[typeof(Specialization).Name]);
+            this._view = new DataView(Program.DbContext[typeof(ItemManufacturer).Name]);
             this.dgwTable.DataSource = this._view;
             this.dgwTable.Columns[1].Visible = false;
-            this.dgwTable.Columns[0].HeaderText = "Specialization name";
+            this.dgwTable.Columns[0].HeaderText = "Manfuacturer name";
             this.dgwTable.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             this.Dock = DockStyle.Fill;
         }
@@ -36,7 +34,7 @@ namespace IkMeKursaDarbs.Components
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Program.DbContext.Update<Specialization>();
+            Program.DbContext.Update<ItemManufacturer>();
         }
     }
 }

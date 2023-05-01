@@ -1,11 +1,14 @@
 ﻿using IkMeKursaDarbs.Data;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace IkMeKursaDarbs
 {
@@ -29,6 +32,15 @@ namespace IkMeKursaDarbs
                 {
                     var memberExpr = (MemberExpression)lambda.Body;
                     return memberExpr.Member.Name;
+                }
+                else if (lambda.Body.NodeType == ExpressionType.Convert)
+                {
+                    var convertExpr = (UnaryExpression)lambda.Body;
+                    if (convertExpr.Operand.NodeType == ExpressionType.MemberAccess)
+                    {
+                        var memberExpr = (MemberExpression)convertExpr.Operand;
+                        return memberExpr.Member.Name;
+                    }
                 }
             }
             throw new ArgumentException("Invalid expression");

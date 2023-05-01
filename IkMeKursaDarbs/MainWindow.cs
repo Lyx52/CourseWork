@@ -54,7 +54,8 @@ namespace IkMeKursaDarbs
                     Text = "Inventory managment",
                     Tag = new List<ComponentTab>
                     {
-                        new ComponentTab("Inventory managment", new InventoryManagmentComponent())
+                        new ComponentTab("Inventory", new InventoryManagmentComponent()),
+                        new ComponentTab("Manufacturers", new ManufacturerManagmentComponent())
                     }
                 });
             UserContext.OnLoggedIn += OnLoggedIn;

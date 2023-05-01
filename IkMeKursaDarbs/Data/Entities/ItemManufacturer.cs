@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace IkMeKursaDarbs.Data.Entities
 {
-    public class InventoryCategory : IdEntity
+    public class ItemManufacturer : IdEntity
     {
         [Constraint("NOT NULL", "text")]
         public string Name { get; set; }
-
-        [Constraint("DEFAULT -1", "integer")]
-        [TableRelation(typeof(InventoryCategory), false)]
-        public int ParentId { get; set; }
     }
 }

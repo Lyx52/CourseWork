@@ -97,7 +97,7 @@ namespace IkMeKursaDarbs.Data
             TDataType entity = (TDataType)instance.Clone();
             foreach (var prop in typeof(TDataType).GetProperties())
             {
-                prop.SetValue(entity, row[prop.Name]);
+                prop.SetValue(entity, row[prop.Name] == DBNull.Value ? default : row[prop.Name]);
             }
             return entity;
         }

@@ -10,12 +10,15 @@ namespace IkMeKursaDarbs.Data.Entities
     {
         [Constraint("NOT NULL", "text")]
         public string ItemName { get; set; }
+        [Constraint("DEFAULT NULL", "text")]
+        public string PartNumber { get; set; }
 
         [Constraint("DEFAULT 0", "integer")]
         public int Count { get; set; }
 
-        [Constraint("NOT NULL", "text")]
-        public string Manufacturer { get; set; }
+        [Constraint("DEFAULT NULL", "integer")]
+        [TableRelation(typeof(ItemManufacturer), false)]
+        public int ManufacturerId { get; set; }
 
         [Constraint("NOT NULL", "integer")]
         [TableRelation(typeof(InventoryCategory), false)]

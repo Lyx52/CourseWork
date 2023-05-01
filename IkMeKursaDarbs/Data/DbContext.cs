@@ -37,16 +37,16 @@ namespace IkMeKursaDarbs
             // Izveidojam tabulas
             await this.CreateSchema<AppUser>(true, true, cancellationToken);
             await this.CreateSchema<UserRole>(true, true, cancellationToken);
-            await this.CreateSchema<Specialization>(true, false, cancellationToken);
-            await this.CreateSchema<Mechanic>(true, false, cancellationToken);
-            await this.CreateSchema<InventoryCategory>(true, false, cancellationToken);
-            await this.CreateSchema<InventoryItem>(true, false, cancellationToken);
+            await this.CreateSchema<Specialization>(true, true, cancellationToken);
+            await this.CreateSchema<Mechanic>(true, true, cancellationToken);
+            await this.CreateSchema<InventoryCategory>(true, true, cancellationToken);
+            await this.CreateSchema<InventoryItem>(true, true, cancellationToken);
+            await this.CreateSchema<ItemManufacturer>(true, true, cancellationToken);
 
             // Izveidojam relacijas
             this.DataSet.AddRelations<AppUser>();
             this.DataSet.AddRelations<Mechanic>();
             this.DataSet.AddRelations<InventoryItem>();
-            this.DataSet.AddRelations<InventoryCategory>();
 
             // Izveidot admin lietotāju, ja tāds neēksistē
             if (this.DataSet.Query<UserRole>((role) => role.RoleName == "Administrator").Count() <= 0)
@@ -62,6 +62,13 @@ namespace IkMeKursaDarbs
                 this.DataSet.Add(new AppUser() { Password = "parole123".ToSHA256(), Username = "tester", RoleId = role.Id });
                 this.Update<AppUser>();
                 this.DataSet.Select<AppUser>("Username = 'admin'").Count();
+            }
+
+            // Izveidot noklusēto noliktavas kategoriju, ja tāda neēksistē (-1 Ir root kategorija)
+            if (this.DataSet.Query<InventoryCategory>(c => c.Name == "Parts").Count() <= 0)
+            {
+                this.DataSet.Add(new InventoryCategory() { Name = "Parts", ParentId = -1 });
+                this.Update<InventoryCategory>();
             }
         }
         public async Task CreateSchema<TDataType>(bool fillDataSet, bool createNewTable = false, CancellationToken cancellationToken = default(CancellationToken)) where TDataType : IdEntity
