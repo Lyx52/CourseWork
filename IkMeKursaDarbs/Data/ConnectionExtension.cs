@@ -21,7 +21,6 @@ namespace IkMeKursaDarbs.Data
             if (type == typeof(bool)) return NpgsqlDbType.Boolean;
             if (type == typeof(float)) return NpgsqlDbType.Real;
             if (type == typeof(double)) return NpgsqlDbType.Double;
-
             throw new ArgumentException($"No Postgres type mapping for type {type}");
         }
         public static int GetPostgresTypeSize(Type type)

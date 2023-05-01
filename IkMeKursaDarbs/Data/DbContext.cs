@@ -42,6 +42,9 @@ namespace IkMeKursaDarbs
             await this.CreateSchema<InventoryCategory>(true, true, cancellationToken);
             await this.CreateSchema<InventoryItem>(true, true, cancellationToken);
             await this.CreateSchema<ItemManufacturer>(true, true, cancellationToken);
+            await this.CreateSchema<Vehicle>(true, true, cancellationToken);
+            await this.CreateSchema<MechanicTask>(true, true, cancellationToken);
+            await this.CreateSchema<Customer>(true, true, cancellationToken);
 
             // Izveidojam relacijas
             this.DataSet.AddRelations<AppUser>();

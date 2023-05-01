@@ -152,12 +152,15 @@
     <Compile Include="Data\DataSetExtension.cs" />
     <Compile Include="Data\DbContext.cs" />
     <Compile Include="Data\Entities\AppUser.cs" />
+    <Compile Include="Data\Entities\Customer.cs" />
+    <Compile Include="Data\Entities\MechanicTask.cs" />
     <Compile Include="Data\Entities\InventoryCategory.cs" />
     <Compile Include="Data\Entities\InventoryItem.cs" />
     <Compile Include="Data\Entities\ItemManufacturer.cs" />
     <Compile Include="Data\Entities\Mechanic.cs" />
     <Compile Include="Data\Entities\Specialization.cs" />
     <Compile Include="Data\Entities\UserRole.cs" />
+    <Compile Include="Data\Entities\Vehicle.cs" />
     <Compile Include="Data\Enums\RolePremissionType.cs" />
     <Compile Include="Data\IdEntity.cs" />
     <Compile Include="Data\TableRelationAttribute.cs" />
@@ -176,6 +179,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\UserContext.cs" />
+    <Compile Include="ServiceManagmentComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ServiceManagmentComponent.Designer.cs">
+      <DependentUpon>ServiceManagmentComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="Components\DashboardComponent.resx">
       <DependentUpon>DashboardComponent.cs</DependentUpon>
@@ -213,6 +222,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ServiceManagmentComponent.resx">
+      <DependentUpon>ServiceManagmentComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
