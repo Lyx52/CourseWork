@@ -1,4 +1,6 @@
-﻿using System;
+﻿using IkMeKursaDarbs.Data.Entities;
+using IkMeKursaDarbs.Forms;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,6 +18,17 @@ namespace IkMeKursaDarbs.Components
         {
             InitializeComponent();
             calSchedule.AddBoldedDate(DateTime.Now);
+        }
+
+        private void btnShowServiceDialog_Click(object sender, EventArgs e)
+        {
+            ServiceInputForm serviceForm = new ServiceInputForm();
+            serviceForm.ShowDialog();
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

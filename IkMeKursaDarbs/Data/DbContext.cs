@@ -35,6 +35,9 @@ namespace IkMeKursaDarbs
         public async Task Initialize(CancellationToken cancellationToken = default(CancellationToken))
         {
             // Izveidojam tabulas
+            await this.CreateSchema<Country>(true, true, cancellationToken);
+            await this.CreateSchema<City>(true, true, cancellationToken);
+            await this.CreateSchema<Address>(true, true, cancellationToken);
             await this.CreateSchema<AppUser>(true, true, cancellationToken);
             await this.CreateSchema<UserRole>(true, true, cancellationToken);
             await this.CreateSchema<Specialization>(true, true, cancellationToken);
@@ -50,6 +53,8 @@ namespace IkMeKursaDarbs
             this.DataSet.AddRelations<AppUser>();
             this.DataSet.AddRelations<Mechanic>();
             this.DataSet.AddRelations<InventoryItem>();
+            this.DataSet.AddRelations<City>();
+            this.DataSet.AddRelations<Address>();
 
             // Izveidot admin lietotāju, ja tāds neēksistē
             if (this.DataSet.Query<UserRole>((role) => role.RoleName == "Administrator").Count() <= 0)
@@ -73,6 +78,17 @@ namespace IkMeKursaDarbs
                 this.DataSet.Add(new InventoryCategory() { Name = "Parts", ParentId = -1 });
                 this.Update<InventoryCategory>();
             }
+            this.DataSet.Add(new Country() { Name = "Latvia" });
+            this.DataSet.Add(new Country() { Name = "Germany" });
+            this.Update<Country>();
+            this.DataSet.Add(new City() { Name = "Jelgava", CountryId = this.DataSet.Query<Country>(c => c.Name == "Latvia").First().Id });
+            this.DataSet.Add(new City() { Name = "Berlin", CountryId = this.DataSet.Query<Country>(c => c.Name == "Germany").First().Id });
+            this.DataSet.Add(new City() { Name = "Bremen", CountryId = this.DataSet.Query<Country>(c => c.Name == "Germany").First().Id });
+            this.Update<City>();
+            this.DataSet.Add(new Address() { Street = "Street1", CityId = this.DataSet.Query<City>(c => c.Name == "Bremen").First().Id });
+            this.Update<Address>();
+            this.DataSet.Add(new Customer() { Name = "Name1", Surname = "Surname1", AddressId = this.DataSet.Query<Address>(c => c.Street == "Street1").First().Id, Email = "test@test.com", PhoneNumber = "+37123232323" });
+            this.Update<Customer>();
         }
         public async Task CreateSchema<TDataType>(bool fillDataSet, bool createNewTable = false, CancellationToken cancellationToken = default(CancellationToken)) where TDataType : IdEntity
         {

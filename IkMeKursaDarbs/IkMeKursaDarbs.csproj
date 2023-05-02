@@ -151,7 +151,10 @@
     <Compile Include="Data\ConstraintAttribute.cs" />
     <Compile Include="Data\DataSetExtension.cs" />
     <Compile Include="Data\DbContext.cs" />
+    <Compile Include="Data\Entities\Address.cs" />
     <Compile Include="Data\Entities\AppUser.cs" />
+    <Compile Include="Data\Entities\City.cs" />
+    <Compile Include="Data\Entities\Country.cs" />
     <Compile Include="Data\Entities\Customer.cs" />
     <Compile Include="Data\Entities\MechanicTask.cs" />
     <Compile Include="Data\Entities\InventoryCategory.cs" />
@@ -164,11 +167,17 @@
     <Compile Include="Data\Enums\RolePremissionType.cs" />
     <Compile Include="Data\IdEntity.cs" />
     <Compile Include="Data\TableRelationAttribute.cs" />
-    <Compile Include="LoginForm.cs">
+    <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LoginForm.Designer.cs">
+    <Compile Include="Forms\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ServiceInputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ServiceInputForm.Designer.cs">
+      <DependentUpon>ServiceInputForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
@@ -179,12 +188,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\UserContext.cs" />
-    <Compile Include="ServiceManagmentComponent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ServiceManagmentComponent.Designer.cs">
-      <DependentUpon>ServiceManagmentComponent.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="Components\DashboardComponent.resx">
       <DependentUpon>DashboardComponent.cs</DependentUpon>
@@ -207,8 +210,11 @@
     <EmbeddedResource Include="Components\UserManagmentComponent.resx">
       <DependentUpon>UserManagmentComponent.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoginForm.resx">
+    <EmbeddedResource Include="Forms\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ServiceInputForm.resx">
+      <DependentUpon>ServiceInputForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
@@ -222,9 +228,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="ServiceManagmentComponent.resx">
-      <DependentUpon>ServiceManagmentComponent.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

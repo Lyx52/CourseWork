@@ -9,6 +9,8 @@ namespace IkMeKursaDarbs.Data.Entities
     public class MechanicTask : IdEntity
     {
         [Constraint("NOT NULL", "text")]
+        public string Name { get; set; }
+        [Constraint("NOT NULL", "text")]
         public string Description { get; set; }
         [Constraint("NOT NULL")]
         [TableRelation(typeof(MechanicTask), false)]

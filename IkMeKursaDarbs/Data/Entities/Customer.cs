@@ -16,7 +16,8 @@ namespace IkMeKursaDarbs.Data.Entities
         public string PhoneNumber { get; set; }
         [Constraint("NOT NULL", "text")]
         public string Email { get; set; }
-        [Constraint("NOT NULL", "text")]
-        public string HomeAddress { get; set; }
+        [Constraint("NOT NULL", "integer")]
+        [TableRelation(typeof(Address), false)]
+        public int AddressId { get; set; }
     }
 }
