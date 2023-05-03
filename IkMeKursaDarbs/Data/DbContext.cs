@@ -41,6 +41,7 @@ namespace IkMeKursaDarbs
             await this.CreateSchema<AppUser>(true, true, cancellationToken);
             await this.CreateSchema<UserRole>(true, true, cancellationToken);
             await this.CreateSchema<Specialization>(true, true, cancellationToken);
+            await this.CreateSchema<MechanicSpecialization>(true, true, cancellationToken);
             await this.CreateSchema<Mechanic>(true, true, cancellationToken);
             await this.CreateSchema<InventoryCategory>(true, true, cancellationToken);
             await this.CreateSchema<InventoryItem>(true, true, cancellationToken);
@@ -51,12 +52,13 @@ namespace IkMeKursaDarbs
 
             // Izveidojam relacijas
             this.DataSet.AddRelations<AppUser>();
-            this.DataSet.AddRelations<Mechanic>();
             this.DataSet.AddRelations<InventoryItem>();
             this.DataSet.AddRelations<City>();
             this.DataSet.AddRelations<Address>();
             this.DataSet.AddRelations<Vehicle>();
             this.DataSet.AddRelations<Customer>();
+            this.DataSet.AddRelations<MechanicTask>();
+            this.DataSet.AddRelations<MechanicSpecialization>();
 
             // Izveidot admin lietotāju, ja tāds neēksistē
             if (this.DataSet.Query<UserRole>((role) => role.RoleName == "Administrator").Count() <= 0)
@@ -80,6 +82,7 @@ namespace IkMeKursaDarbs
                 this.DataSet.Add(new InventoryCategory() { Name = "Parts", ParentId = -1 });
                 this.Update<InventoryCategory>();
             }
+
             this.DataSet.Add(new Country() { Name = "Latvia" });
             this.DataSet.Add(new Country() { Name = "Germany" });
             this.Update<Country>();

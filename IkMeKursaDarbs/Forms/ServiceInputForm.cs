@@ -1,4 +1,5 @@
-﻿using IkMeKursaDarbs.Data;
+﻿using IkMeKursaDarbs.Components;
+using IkMeKursaDarbs.Data;
 using IkMeKursaDarbs.Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,23 @@ namespace IkMeKursaDarbs.Forms
 {
     public partial class ServiceInputForm : Form
     {
+        // Customer
         private Customer customer = new Customer();
         private Address customerAddress = new Address();
         private City customerCity = new City();
         private Country customerCountry = new Country();
+        // Vehicle
         private Vehicle customerVehicle = new Vehicle();
+        
+        // Tasks
+        private Mechanic taskMechanic = new Mechanic();
+        private Specialization taskReqSpec = new Specialization();
+        private MechanicTask task = new MechanicTask();
+
         bool IsVehPageEnabled = false;
         bool IsServicePageEnabled = false;
         int SelectedCustomer = -1;
+        int SelectedVehicle = -1;
         public ServiceInputForm()
         {
             InitializeComponent();
@@ -68,7 +78,16 @@ namespace IkMeKursaDarbs.Forms
             txtVehicleModel.DataBindings.Add("Text", customerVehicle, "Model");
             txtVehicleBrand.DataBindings.Add("Text", customerVehicle, "Brand");
             txtVehicleVin.DataBindings.Add("Text", customerVehicle, "VinNumber");
+
             // Service page
+            var trwTasks = RecursiveTreeView<MechanicTask>.Create<MechanicTask>(t => t.ParentTaskId, t => t.Name);
+            trwTasks.Dock = DockStyle.Fill;
+            trwPanel.Controls.Add(trwTasks);
+            txtTaskName.DataBindings.Add("Text", task, "Name");
+            txtTaskDescription.DataBindings.Add("Text", task, "Description");
+
+            BindingSource reqSpecBindingSource = new BindingSource();
+            reqSpecBindingSource.DataSource = Program.DbContext[typeof(Specialization).Name, typeof(Mechanic).Name].RelationName;
         }
 
         private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
@@ -96,6 +115,8 @@ namespace IkMeKursaDarbs.Forms
             }
             SelectedCustomer = cbxCustomerSearch.SelectedIndex;
             customer = rowCustomer;
+
+            btnCreateOrUpdateCustomer.Text = "Update customer";
         }
         private void SelectByPrimaryKey(System.Windows.Forms.ComboBox cbox, int pk)
         {
@@ -248,13 +269,14 @@ namespace IkMeKursaDarbs.Forms
             txtVehicleVin.Text = vehInfo.VinNumber;
             txtVehicleBrand.Text = vehInfo.Brand;
             txtVehicleModel.Text = vehInfo.Model;
+            customerVehicle = vehInfo;
+            SelectedVehicle = cbxVinSearch.SelectedIndex;
+            btnCreateOrUpdateVeh.Text = "Update vehicle";
         }
 
         private void btnCreateOrUpdateVeh_Click(object sender, EventArgs e)
         {
-            // Validate country and city
-
-            // Add address if it has pk
+            // Add vehicle if it has pk
             if (customerVehicle.Id <= 0)
             {
                 Program.DbContext.DataSet.Add<Vehicle>(customerVehicle);
@@ -262,14 +284,13 @@ namespace IkMeKursaDarbs.Forms
             }
 
             // Update
+            customerVehicle.OwnerId = customer.Id;
             Program.DbContext.DataSet.Update<Vehicle>(customerVehicle);
             Program.DbContext.Update<Vehicle>();
-            customer.AddressId = customerAddress.Id;
-            Program.DbContext.DataSet.Update<Customer>(customer);
-            Program.DbContext.Update<Customer>();
             UpdateNamesAndSurnamesColumn();
-            IsVehPageEnabled = true;
-            tabControl.SelectedTab = tabVehicleInformation;
+            cbxVinSearch.SelectedIndex = SelectedVehicle < 0 ? cbxVinSearch.Items.Count - 1 : SelectedVehicle;
+            IsServicePageEnabled = true;
+            tabControl.SelectedTab = tabService;
         }
 
         private void btnRemoveCustomer_Click(object sender, EventArgs e)
@@ -284,6 +305,24 @@ namespace IkMeKursaDarbs.Forms
             txtCustomerName.Text = string.Empty;
             cbxCustomerCountry.SelectedIndex = -1;
             cbxCustomerCity.SelectedIndex = -1;
+            btnCreateOrUpdateCustomer.Text = "Create customer";
+        }
+
+        private void btnRemoveVeh_Click(object sender, EventArgs e)
+        {
+            customerVehicle.Id = 0;
+            SelectedVehicle = -1;
+            cbxVinSearch.SelectedIndex = -1;
+            txtVehicleBrand.Text = string.Empty;
+            txtVehicleModel.Text = string.Empty;
+            txtVehicleVin.Text = string.Empty;
+            btnCreateOrUpdateVeh.Text = "Create vehicle";
+        }
+
+        private void btnAddNew_Click(object sender, EventArgs e)
+        {
+            Program.DbContext.DataSet.Add(task);
+            Program.DbContext.Update<Address>();
         }
     }
 }

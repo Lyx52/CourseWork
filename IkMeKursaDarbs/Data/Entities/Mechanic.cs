@@ -12,9 +12,6 @@ namespace IkMeKursaDarbs.Data.Entities
         public string Name { get; set; }
         [Constraint("NOT NULL", "text")]
         public string Surname { get; set; }
-        [Constraint("NOT NULL")]
-        [TableRelation(typeof(Specialization), false)]
-        public int SpecializationId { get; set; }
         [Constraint("DEFAULT NULL")]
         [TableRelation(typeof(AppUser), false)]
         public int UserId { get; set; }

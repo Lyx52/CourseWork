@@ -30,10 +30,11 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabCustomer = new System.Windows.Forms.TabPage();
+            this.btnRemoveCustomer = new System.Windows.Forms.Button();
             this.cbxCustomerSearch = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtCustomerStreet = new System.Windows.Forms.TextBox();
-            this.btnCreateOrUpdate = new System.Windows.Forms.Button();
+            this.btnCreateOrUpdateCustomer = new System.Windows.Forms.Button();
             this.cbxCustomerCity = new System.Windows.Forms.ComboBox();
             this.cbxCustomerCountry = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -50,6 +51,7 @@
             this.btnAddCustomer = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.tabVehicleInformation = new System.Windows.Forms.TabPage();
+            this.btnRemoveVeh = new System.Windows.Forms.Button();
             this.cbxVinSearch = new System.Windows.Forms.ComboBox();
             this.btnAddVeh = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
@@ -62,19 +64,23 @@
             this.txtVehicleVin = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.tabService = new System.Windows.Forms.TabPage();
-            this.btnSave = new System.Windows.Forms.Button();
+            this.trwPanel = new System.Windows.Forms.Panel();
+            this.btnTaskSave = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.dtpDueDate = new System.Windows.Forms.DateTimePicker();
+            this.txtTaskName = new System.Windows.Forms.TextBox();
+            this.dtpTaskDue = new System.Windows.Forms.DateTimePicker();
             this.label12 = new System.Windows.Forms.Label();
-            this.dtpCreatedDate = new System.Windows.Forms.DateTimePicker();
+            this.dtpTaskCreated = new System.Windows.Forms.DateTimePicker();
             this.label11 = new System.Windows.Forms.Label();
-            this.rtbDescription = new System.Windows.Forms.RichTextBox();
+            this.txtTaskDescription = new System.Windows.Forms.RichTextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.btnAddNew = new System.Windows.Forms.Button();
-            this.trwTasks = new System.Windows.Forms.TreeView();
-            this.btnRemoveCustomer = new System.Windows.Forms.Button();
+            this.btnAddNewTask = new System.Windows.Forms.Button();
+            this.directoryEntry1 = new System.DirectoryServices.DirectoryEntry();
+            this.cbxTaskSpec = new System.Windows.Forms.ComboBox();
+            this.cbxTaskMechanic = new System.Windows.Forms.ComboBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabCustomer.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -112,6 +118,16 @@
             this.tabCustomer.Text = "Customer info";
             this.tabCustomer.UseVisualStyleBackColor = true;
             // 
+            // btnRemoveCustomer
+            // 
+            this.btnRemoveCustomer.Location = new System.Drawing.Point(336, 33);
+            this.btnRemoveCustomer.Name = "btnRemoveCustomer";
+            this.btnRemoveCustomer.Size = new System.Drawing.Size(75, 23);
+            this.btnRemoveCustomer.TabIndex = 24;
+            this.btnRemoveCustomer.Text = "Remove";
+            this.btnRemoveCustomer.UseVisualStyleBackColor = true;
+            this.btnRemoveCustomer.Click += new System.EventHandler(this.btnRemoveCustomer_Click);
+            // 
             // cbxCustomerSearch
             // 
             this.cbxCustomerSearch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
@@ -125,7 +141,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.txtCustomerStreet);
-            this.groupBox1.Controls.Add(this.btnCreateOrUpdate);
+            this.groupBox1.Controls.Add(this.btnCreateOrUpdateCustomer);
             this.groupBox1.Controls.Add(this.cbxCustomerCity);
             this.groupBox1.Controls.Add(this.cbxCustomerCountry);
             this.groupBox1.Controls.Add(this.label8);
@@ -153,15 +169,15 @@
             this.txtCustomerStreet.Size = new System.Drawing.Size(196, 23);
             this.txtCustomerStreet.TabIndex = 24;
             // 
-            // btnCreateOrUpdate
+            // btnCreateOrUpdateCustomer
             // 
-            this.btnCreateOrUpdate.Location = new System.Drawing.Point(640, 22);
-            this.btnCreateOrUpdate.Name = "btnCreateOrUpdate";
-            this.btnCreateOrUpdate.Size = new System.Drawing.Size(127, 23);
-            this.btnCreateOrUpdate.TabIndex = 7;
-            this.btnCreateOrUpdate.Text = "Create or update";
-            this.btnCreateOrUpdate.UseVisualStyleBackColor = true;
-            this.btnCreateOrUpdate.Click += new System.EventHandler(this.btnCreateOrUpdate_Click);
+            this.btnCreateOrUpdateCustomer.Location = new System.Drawing.Point(640, 22);
+            this.btnCreateOrUpdateCustomer.Name = "btnCreateOrUpdateCustomer";
+            this.btnCreateOrUpdateCustomer.Size = new System.Drawing.Size(127, 23);
+            this.btnCreateOrUpdateCustomer.TabIndex = 7;
+            this.btnCreateOrUpdateCustomer.Text = "Create vehicle";
+            this.btnCreateOrUpdateCustomer.UseVisualStyleBackColor = true;
+            this.btnCreateOrUpdateCustomer.Click += new System.EventHandler(this.btnCreateOrUpdate_Click);
             // 
             // cbxCustomerCity
             // 
@@ -308,6 +324,7 @@
             // 
             // tabVehicleInformation
             // 
+            this.tabVehicleInformation.Controls.Add(this.btnRemoveVeh);
             this.tabVehicleInformation.Controls.Add(this.cbxVinSearch);
             this.tabVehicleInformation.Controls.Add(this.btnAddVeh);
             this.tabVehicleInformation.Controls.Add(this.label16);
@@ -319,6 +336,16 @@
             this.tabVehicleInformation.TabIndex = 1;
             this.tabVehicleInformation.Text = "Vehicle info";
             this.tabVehicleInformation.UseVisualStyleBackColor = true;
+            // 
+            // btnRemoveVeh
+            // 
+            this.btnRemoveVeh.Location = new System.Drawing.Point(336, 34);
+            this.btnRemoveVeh.Name = "btnRemoveVeh";
+            this.btnRemoveVeh.Size = new System.Drawing.Size(75, 23);
+            this.btnRemoveVeh.TabIndex = 25;
+            this.btnRemoveVeh.Text = "Remove";
+            this.btnRemoveVeh.UseVisualStyleBackColor = true;
+            this.btnRemoveVeh.Click += new System.EventHandler(this.btnRemoveVeh_Click);
             // 
             // cbxVinSearch
             // 
@@ -389,7 +416,7 @@
             this.btnCreateOrUpdateVeh.Name = "btnCreateOrUpdateVeh";
             this.btnCreateOrUpdateVeh.Size = new System.Drawing.Size(127, 23);
             this.btnCreateOrUpdateVeh.TabIndex = 7;
-            this.btnCreateOrUpdateVeh.Text = "Create or update";
+            this.btnCreateOrUpdateVeh.Text = "Create vehicle";
             this.btnCreateOrUpdateVeh.UseVisualStyleBackColor = true;
             this.btnCreateOrUpdateVeh.Click += new System.EventHandler(this.btnCreateOrUpdateVeh_Click);
             // 
@@ -429,10 +456,10 @@
             // 
             // tabService
             // 
-            this.tabService.Controls.Add(this.btnSave);
+            this.tabService.Controls.Add(this.trwPanel);
+            this.tabService.Controls.Add(this.btnTaskSave);
             this.tabService.Controls.Add(this.groupBox3);
-            this.tabService.Controls.Add(this.btnAddNew);
-            this.tabService.Controls.Add(this.trwTasks);
+            this.tabService.Controls.Add(this.btnAddNewTask);
             this.tabService.Location = new System.Drawing.Point(4, 25);
             this.tabService.Name = "tabService";
             this.tabService.Padding = new System.Windows.Forms.Padding(3);
@@ -441,24 +468,35 @@
             this.tabService.Text = "Service tasks";
             this.tabService.UseVisualStyleBackColor = true;
             // 
-            // btnSave
+            // trwPanel
             // 
-            this.btnSave.Location = new System.Drawing.Point(614, 6);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(82, 23);
-            this.btnSave.TabIndex = 3;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
+            this.trwPanel.Location = new System.Drawing.Point(3, 6);
+            this.trwPanel.Name = "trwPanel";
+            this.trwPanel.Size = new System.Drawing.Size(343, 407);
+            this.trwPanel.TabIndex = 4;
+            // 
+            // btnTaskSave
+            // 
+            this.btnTaskSave.Location = new System.Drawing.Point(614, 6);
+            this.btnTaskSave.Name = "btnTaskSave";
+            this.btnTaskSave.Size = new System.Drawing.Size(82, 23);
+            this.btnTaskSave.TabIndex = 3;
+            this.btnTaskSave.Text = "Save";
+            this.btnTaskSave.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.label18);
+            this.groupBox3.Controls.Add(this.label17);
+            this.groupBox3.Controls.Add(this.cbxTaskMechanic);
+            this.groupBox3.Controls.Add(this.cbxTaskSpec);
             this.groupBox3.Controls.Add(this.label13);
-            this.groupBox3.Controls.Add(this.txtName);
-            this.groupBox3.Controls.Add(this.dtpDueDate);
+            this.groupBox3.Controls.Add(this.txtTaskName);
+            this.groupBox3.Controls.Add(this.dtpTaskDue);
             this.groupBox3.Controls.Add(this.label12);
-            this.groupBox3.Controls.Add(this.dtpCreatedDate);
+            this.groupBox3.Controls.Add(this.dtpTaskCreated);
             this.groupBox3.Controls.Add(this.label11);
-            this.groupBox3.Controls.Add(this.rtbDescription);
+            this.groupBox3.Controls.Add(this.txtTaskDescription);
             this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Location = new System.Drawing.Point(352, 55);
             this.groupBox3.Name = "groupBox3";
@@ -471,97 +509,121 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(6, 19);
+            this.label13.Location = new System.Drawing.Point(6, 34);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(49, 17);
             this.label13.TabIndex = 12;
             this.label13.Text = "Name";
             // 
-            // txtName
+            // txtTaskName
             // 
-            this.txtName.Location = new System.Drawing.Point(9, 39);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(219, 23);
-            this.txtName.TabIndex = 3;
+            this.txtTaskName.Location = new System.Drawing.Point(9, 54);
+            this.txtTaskName.Name = "txtTaskName";
+            this.txtTaskName.Size = new System.Drawing.Size(197, 23);
+            this.txtTaskName.TabIndex = 3;
             // 
-            // dtpDueDate
+            // dtpTaskDue
             // 
-            this.dtpDueDate.Location = new System.Drawing.Point(6, 256);
-            this.dtpDueDate.Name = "dtpDueDate";
-            this.dtpDueDate.Size = new System.Drawing.Size(200, 23);
-            this.dtpDueDate.TabIndex = 11;
+            this.dtpTaskDue.Location = new System.Drawing.Point(6, 320);
+            this.dtpTaskDue.Name = "dtpTaskDue";
+            this.dtpTaskDue.Size = new System.Drawing.Size(200, 23);
+            this.dtpTaskDue.TabIndex = 11;
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(6, 236);
+            this.label12.Location = new System.Drawing.Point(6, 300);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(74, 17);
             this.label12.TabIndex = 10;
             this.label12.Text = "Due date";
             // 
-            // dtpCreatedDate
+            // dtpTaskCreated
             // 
-            this.dtpCreatedDate.CausesValidation = false;
-            this.dtpCreatedDate.Location = new System.Drawing.Point(6, 190);
-            this.dtpCreatedDate.Name = "dtpCreatedDate";
-            this.dtpCreatedDate.Size = new System.Drawing.Size(200, 23);
-            this.dtpCreatedDate.TabIndex = 9;
+            this.dtpTaskCreated.CausesValidation = false;
+            this.dtpTaskCreated.Location = new System.Drawing.Point(6, 254);
+            this.dtpTaskCreated.Name = "dtpTaskCreated";
+            this.dtpTaskCreated.Size = new System.Drawing.Size(200, 23);
+            this.dtpTaskCreated.TabIndex = 9;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(6, 170);
+            this.label11.Location = new System.Drawing.Point(6, 234);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(65, 17);
             this.label11.TabIndex = 8;
             this.label11.Text = "Created";
             // 
-            // rtbDescription
+            // txtTaskDescription
             // 
-            this.rtbDescription.Location = new System.Drawing.Point(6, 98);
-            this.rtbDescription.Name = "rtbDescription";
-            this.rtbDescription.Size = new System.Drawing.Size(417, 52);
-            this.rtbDescription.TabIndex = 7;
-            this.rtbDescription.Text = "";
+            this.txtTaskDescription.Location = new System.Drawing.Point(6, 179);
+            this.txtTaskDescription.Name = "txtTaskDescription";
+            this.txtTaskDescription.Size = new System.Drawing.Size(417, 52);
+            this.txtTaskDescription.TabIndex = 7;
+            this.txtTaskDescription.Text = "";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(6, 78);
+            this.label10.Location = new System.Drawing.Point(6, 159);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(90, 17);
             this.label10.TabIndex = 6;
             this.label10.Text = "Description";
             // 
-            // btnAddNew
+            // btnAddNewTask
             // 
-            this.btnAddNew.Location = new System.Drawing.Point(702, 6);
-            this.btnAddNew.Name = "btnAddNew";
-            this.btnAddNew.Size = new System.Drawing.Size(82, 23);
-            this.btnAddNew.TabIndex = 1;
-            this.btnAddNew.Text = "Add new";
-            this.btnAddNew.UseVisualStyleBackColor = true;
+            this.btnAddNewTask.Location = new System.Drawing.Point(702, 6);
+            this.btnAddNewTask.Name = "btnAddNewTask";
+            this.btnAddNewTask.Size = new System.Drawing.Size(82, 23);
+            this.btnAddNewTask.TabIndex = 1;
+            this.btnAddNewTask.Text = "Add new";
+            this.btnAddNewTask.UseVisualStyleBackColor = true;
+            this.btnAddNewTask.Click += new System.EventHandler(this.btnAddNew_Click);
             // 
-            // trwTasks
+            // cbxTaskSpec
             // 
-            this.trwTasks.Location = new System.Drawing.Point(8, 6);
-            this.trwTasks.Name = "trwTasks";
-            this.trwTasks.Size = new System.Drawing.Size(338, 407);
-            this.trwTasks.TabIndex = 0;
+            this.cbxTaskSpec.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbxTaskSpec.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbxTaskSpec.FormattingEnabled = true;
+            this.cbxTaskSpec.Location = new System.Drawing.Point(9, 116);
+            this.cbxTaskSpec.Name = "cbxTaskSpec";
+            this.cbxTaskSpec.Size = new System.Drawing.Size(197, 24);
+            this.cbxTaskSpec.TabIndex = 13;
             // 
-            // btnRemoveCustomer
+            // cbxTaskMechanic
             // 
-            this.btnRemoveCustomer.Location = new System.Drawing.Point(336, 33);
-            this.btnRemoveCustomer.Name = "btnRemoveCustomer";
-            this.btnRemoveCustomer.Size = new System.Drawing.Size(75, 23);
-            this.btnRemoveCustomer.TabIndex = 24;
-            this.btnRemoveCustomer.Text = "Remove";
-            this.btnRemoveCustomer.UseVisualStyleBackColor = true;
-            this.btnRemoveCustomer.Click += new System.EventHandler(this.btnRemoveCustomer_Click);
+            this.cbxTaskMechanic.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbxTaskMechanic.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbxTaskMechanic.FormattingEnabled = true;
+            this.cbxTaskMechanic.Location = new System.Drawing.Point(234, 116);
+            this.cbxTaskMechanic.Name = "cbxTaskMechanic";
+            this.cbxTaskMechanic.Size = new System.Drawing.Size(189, 24);
+            this.cbxTaskMechanic.TabIndex = 14;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(6, 96);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(148, 17);
+            this.label17.TabIndex = 15;
+            this.label17.Text = "Req. Specialization";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(231, 96);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(129, 17);
+            this.label18.TabIndex = 16;
+            this.label18.Text = "Assign mechanic";
             // 
             // ServiceInputForm
             // 
@@ -608,7 +670,7 @@
         private System.Windows.Forms.ComboBox cbxCustomerCountry;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Button btnCreateOrUpdate;
+        private System.Windows.Forms.Button btnCreateOrUpdateCustomer;
         private System.Windows.Forms.Button btnAddVeh;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -620,21 +682,27 @@
         private System.Windows.Forms.TextBox txtVehicleBrand;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TabPage tabService;
-        private System.Windows.Forms.TreeView trwTasks;
-        private System.Windows.Forms.Button btnAddNew;
+        private System.Windows.Forms.Button btnAddNewTask;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.RichTextBox rtbDescription;
-        private System.Windows.Forms.DateTimePicker dtpDueDate;
+        private System.Windows.Forms.RichTextBox txtTaskDescription;
+        private System.Windows.Forms.DateTimePicker dtpTaskDue;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.DateTimePicker dtpCreatedDate;
+        private System.Windows.Forms.DateTimePicker dtpTaskCreated;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.TextBox txtTaskName;
+        private System.Windows.Forms.Button btnTaskSave;
         private System.Windows.Forms.ComboBox cbxCustomerSearch;
         private System.Windows.Forms.TextBox txtCustomerStreet;
         private System.Windows.Forms.ComboBox cbxVinSearch;
         private System.Windows.Forms.Button btnRemoveCustomer;
+        private System.DirectoryServices.DirectoryEntry directoryEntry1;
+        private System.Windows.Forms.Panel trwPanel;
+        private System.Windows.Forms.Button btnRemoveVeh;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.ComboBox cbxTaskMechanic;
+        private System.Windows.Forms.ComboBox cbxTaskSpec;
     }
 }

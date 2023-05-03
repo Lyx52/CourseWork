@@ -61,6 +61,7 @@
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.6.0.0\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -156,6 +157,7 @@
     <Compile Include="Data\Entities\City.cs" />
     <Compile Include="Data\Entities\Country.cs" />
     <Compile Include="Data\Entities\Customer.cs" />
+    <Compile Include="Data\Entities\MechanicSpecialization.cs" />
     <Compile Include="Data\Entities\MechanicTask.cs" />
     <Compile Include="Data\Entities\InventoryCategory.cs" />
     <Compile Include="Data\Entities\InventoryItem.cs" />
