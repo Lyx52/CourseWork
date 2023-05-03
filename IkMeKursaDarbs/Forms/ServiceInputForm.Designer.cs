@@ -41,7 +41,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.txtCustomerEmail = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.txtPhoneNr = new System.Windows.Forms.MaskedTextBox();
+            this.txtCustomerPhoneNr = new System.Windows.Forms.MaskedTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txtCustomerSurname = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -50,16 +50,16 @@
             this.btnAddCustomer = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.tabVehicleInformation = new System.Windows.Forms.TabPage();
-            this.button3 = new System.Windows.Forms.Button();
+            this.cbxVinSearch = new System.Windows.Forms.ComboBox();
+            this.btnAddVeh = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
-            this.textBox9 = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.txtVehicleBrand = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.btnCreateOrUpdateVeh = new System.Windows.Forms.Button();
+            this.txtVehicleModel = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
-            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.txtVehicleVin = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.tabService = new System.Windows.Forms.TabPage();
             this.btnSave = new System.Windows.Forms.Button();
@@ -74,6 +74,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.btnAddNew = new System.Windows.Forms.Button();
             this.trwTasks = new System.Windows.Forms.TreeView();
+            this.btnRemoveCustomer = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabCustomer.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -98,6 +99,7 @@
             // 
             // tabCustomer
             // 
+            this.tabCustomer.Controls.Add(this.btnRemoveCustomer);
             this.tabCustomer.Controls.Add(this.cbxCustomerSearch);
             this.tabCustomer.Controls.Add(this.groupBox1);
             this.tabCustomer.Controls.Add(this.btnAddCustomer);
@@ -131,7 +133,7 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.txtCustomerEmail);
             this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.txtPhoneNr);
+            this.groupBox1.Controls.Add(this.txtCustomerPhoneNr);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.txtCustomerSurname);
             this.groupBox1.Controls.Add(this.label3);
@@ -232,13 +234,13 @@
             this.label6.TabIndex = 14;
             this.label6.Text = "E-mail";
             // 
-            // txtPhoneNr
+            // txtCustomerPhoneNr
             // 
-            this.txtPhoneNr.Location = new System.Drawing.Point(113, 137);
-            this.txtPhoneNr.Mask = "+000 00000000";
-            this.txtPhoneNr.Name = "txtPhoneNr";
-            this.txtPhoneNr.Size = new System.Drawing.Size(125, 23);
-            this.txtPhoneNr.TabIndex = 12;
+            this.txtCustomerPhoneNr.Location = new System.Drawing.Point(113, 137);
+            this.txtCustomerPhoneNr.Mask = "+000 00000000";
+            this.txtCustomerPhoneNr.Name = "txtCustomerPhoneNr";
+            this.txtCustomerPhoneNr.Size = new System.Drawing.Size(125, 23);
+            this.txtCustomerPhoneNr.TabIndex = 12;
             // 
             // label4
             // 
@@ -306,9 +308,9 @@
             // 
             // tabVehicleInformation
             // 
-            this.tabVehicleInformation.Controls.Add(this.button3);
+            this.tabVehicleInformation.Controls.Add(this.cbxVinSearch);
+            this.tabVehicleInformation.Controls.Add(this.btnAddVeh);
             this.tabVehicleInformation.Controls.Add(this.label16);
-            this.tabVehicleInformation.Controls.Add(this.textBox9);
             this.tabVehicleInformation.Controls.Add(this.groupBox2);
             this.tabVehicleInformation.Location = new System.Drawing.Point(4, 25);
             this.tabVehicleInformation.Name = "tabVehicleInformation";
@@ -318,14 +320,25 @@
             this.tabVehicleInformation.Text = "Vehicle info";
             this.tabVehicleInformation.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // cbxVinSearch
             // 
-            this.button3.Location = new System.Drawing.Point(255, 33);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 10;
-            this.button3.Text = "Add";
-            this.button3.UseVisualStyleBackColor = true;
+            this.cbxVinSearch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbxVinSearch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbxVinSearch.FormattingEnabled = true;
+            this.cbxVinSearch.Location = new System.Drawing.Point(11, 33);
+            this.cbxVinSearch.Name = "cbxVinSearch";
+            this.cbxVinSearch.Size = new System.Drawing.Size(238, 24);
+            this.cbxVinSearch.TabIndex = 24;
+            // 
+            // btnAddVeh
+            // 
+            this.btnAddVeh.Location = new System.Drawing.Point(255, 33);
+            this.btnAddVeh.Name = "btnAddVeh";
+            this.btnAddVeh.Size = new System.Drawing.Size(75, 23);
+            this.btnAddVeh.TabIndex = 10;
+            this.btnAddVeh.Text = "Add";
+            this.btnAddVeh.UseVisualStyleBackColor = true;
+            this.btnAddVeh.Click += new System.EventHandler(this.btnAddVeh_Click);
             // 
             // label16
             // 
@@ -337,21 +350,14 @@
             this.label16.TabIndex = 9;
             this.label16.Text = "Search customer vehicle VIN";
             // 
-            // textBox9
-            // 
-            this.textBox9.Location = new System.Drawing.Point(11, 33);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(238, 23);
-            this.textBox9.TabIndex = 8;
-            // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.textBox3);
+            this.groupBox2.Controls.Add(this.txtVehicleBrand);
             this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Controls.Add(this.button2);
-            this.groupBox2.Controls.Add(this.textBox7);
+            this.groupBox2.Controls.Add(this.btnCreateOrUpdateVeh);
+            this.groupBox2.Controls.Add(this.txtVehicleModel);
             this.groupBox2.Controls.Add(this.label14);
-            this.groupBox2.Controls.Add(this.textBox8);
+            this.groupBox2.Controls.Add(this.txtVehicleVin);
             this.groupBox2.Controls.Add(this.label15);
             this.groupBox2.Location = new System.Drawing.Point(11, 62);
             this.groupBox2.Name = "groupBox2";
@@ -360,12 +366,12 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Vehicle information";
             // 
-            // textBox3
+            // txtVehicleBrand
             // 
-            this.textBox3.Location = new System.Drawing.Point(426, 54);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(125, 23);
-            this.textBox3.TabIndex = 10;
+            this.txtVehicleBrand.Location = new System.Drawing.Point(426, 54);
+            this.txtVehicleBrand.Name = "txtVehicleBrand";
+            this.txtVehicleBrand.Size = new System.Drawing.Size(125, 23);
+            this.txtVehicleBrand.TabIndex = 10;
             // 
             // label9
             // 
@@ -377,21 +383,22 @@
             this.label9.TabIndex = 11;
             this.label9.Text = "Brand";
             // 
-            // button2
+            // btnCreateOrUpdateVeh
             // 
-            this.button2.Location = new System.Drawing.Point(640, 22);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(127, 23);
-            this.button2.TabIndex = 7;
-            this.button2.Text = "Create or update";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnCreateOrUpdateVeh.Location = new System.Drawing.Point(640, 22);
+            this.btnCreateOrUpdateVeh.Name = "btnCreateOrUpdateVeh";
+            this.btnCreateOrUpdateVeh.Size = new System.Drawing.Size(127, 23);
+            this.btnCreateOrUpdateVeh.TabIndex = 7;
+            this.btnCreateOrUpdateVeh.Text = "Create or update";
+            this.btnCreateOrUpdateVeh.UseVisualStyleBackColor = true;
+            this.btnCreateOrUpdateVeh.Click += new System.EventHandler(this.btnCreateOrUpdateVeh_Click);
             // 
-            // textBox7
+            // txtVehicleModel
             // 
-            this.textBox7.Location = new System.Drawing.Point(113, 98);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(125, 23);
-            this.textBox7.TabIndex = 8;
+            this.txtVehicleModel.Location = new System.Drawing.Point(113, 98);
+            this.txtVehicleModel.Name = "txtVehicleModel";
+            this.txtVehicleModel.Size = new System.Drawing.Size(125, 23);
+            this.txtVehicleModel.TabIndex = 8;
             // 
             // label14
             // 
@@ -403,12 +410,12 @@
             this.label14.TabIndex = 9;
             this.label14.Text = "Model";
             // 
-            // textBox8
+            // txtVehicleVin
             // 
-            this.textBox8.Location = new System.Drawing.Point(113, 54);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(125, 23);
-            this.textBox8.TabIndex = 7;
+            this.txtVehicleVin.Location = new System.Drawing.Point(113, 54);
+            this.txtVehicleVin.Name = "txtVehicleVin";
+            this.txtVehicleVin.Size = new System.Drawing.Size(125, 23);
+            this.txtVehicleVin.TabIndex = 7;
             // 
             // label15
             // 
@@ -546,6 +553,16 @@
             this.trwTasks.Size = new System.Drawing.Size(338, 407);
             this.trwTasks.TabIndex = 0;
             // 
+            // btnRemoveCustomer
+            // 
+            this.btnRemoveCustomer.Location = new System.Drawing.Point(336, 33);
+            this.btnRemoveCustomer.Name = "btnRemoveCustomer";
+            this.btnRemoveCustomer.Size = new System.Drawing.Size(75, 23);
+            this.btnRemoveCustomer.TabIndex = 24;
+            this.btnRemoveCustomer.Text = "Remove";
+            this.btnRemoveCustomer.UseVisualStyleBackColor = true;
+            this.btnRemoveCustomer.Click += new System.EventHandler(this.btnRemoveCustomer_Click);
+            // 
             // ServiceInputForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -586,22 +603,21 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtCustomerEmail;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.MaskedTextBox txtPhoneNr;
+        private System.Windows.Forms.MaskedTextBox txtCustomerPhoneNr;
         private System.Windows.Forms.ComboBox cbxCustomerCity;
         private System.Windows.Forms.ComboBox cbxCustomerCountry;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btnCreateOrUpdate;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnAddVeh;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.TextBox textBox9;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.Button btnCreateOrUpdateVeh;
+        private System.Windows.Forms.TextBox txtVehicleModel;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.TextBox textBox8;
+        private System.Windows.Forms.TextBox txtVehicleVin;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox txtVehicleBrand;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TabPage tabService;
         private System.Windows.Forms.TreeView trwTasks;
@@ -618,5 +634,7 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.ComboBox cbxCustomerSearch;
         private System.Windows.Forms.TextBox txtCustomerStreet;
+        private System.Windows.Forms.ComboBox cbxVinSearch;
+        private System.Windows.Forms.Button btnRemoveCustomer;
     }
 }

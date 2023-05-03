@@ -55,6 +55,8 @@ namespace IkMeKursaDarbs
             this.DataSet.AddRelations<InventoryItem>();
             this.DataSet.AddRelations<City>();
             this.DataSet.AddRelations<Address>();
+            this.DataSet.AddRelations<Vehicle>();
+            this.DataSet.AddRelations<Customer>();
 
             // Izveidot admin lietotāju, ja tāds neēksistē
             if (this.DataSet.Query<UserRole>((role) => role.RoleName == "Administrator").Count() <= 0)
@@ -88,7 +90,13 @@ namespace IkMeKursaDarbs
             this.DataSet.Add(new Address() { Street = "Street1", CityId = this.DataSet.Query<City>(c => c.Name == "Bremen").First().Id });
             this.Update<Address>();
             this.DataSet.Add(new Customer() { Name = "Name1", Surname = "Surname1", AddressId = this.DataSet.Query<Address>(c => c.Street == "Street1").First().Id, Email = "test@test.com", PhoneNumber = "+37123232323" });
+            this.DataSet.Add(new Customer() { Name = "Name2", Surname = "Surname2", AddressId = this.DataSet.Query<Address>(c => c.Street == "Street1").First().Id, Email = "test@test.com", PhoneNumber = "+37123232323" });
+            
             this.Update<Customer>();
+            this.DataSet.Add(new Vehicle() { VinNumber = "1234", Brand = "BMW", Model = "520i", OwnerId = this.DataSet.Query<Customer>(c => c.Name == "Name1" && c.Surname == "Surname1").First().Id });
+            this.DataSet.Add(new Vehicle() { VinNumber = "5678", Brand = "BMW", Model = "530i", OwnerId = this.DataSet.Query<Customer>(c => c.Name == "Name1" && c.Surname == "Surname1").First().Id });
+            this.DataSet.Add(new Vehicle() { VinNumber = "1111", Brand = "BMW", Model = "520i", OwnerId = this.DataSet.Query<Customer>(c => c.Name == "Name2" && c.Surname == "Surname2").First().Id });
+            this.Update<Vehicle>();
         }
         public async Task CreateSchema<TDataType>(bool fillDataSet, bool createNewTable = false, CancellationToken cancellationToken = default(CancellationToken)) where TDataType : IdEntity
         {

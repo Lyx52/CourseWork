@@ -21,11 +21,27 @@ namespace IkMeKursaDarbs.Forms
         private Address customerAddress = new Address();
         private City customerCity = new City();
         private Country customerCountry = new Country();
+        private Vehicle customerVehicle = new Vehicle();
+        bool IsVehPageEnabled = false;
+        bool IsServicePageEnabled = false;
+        int SelectedCustomer = -1;
         public ServiceInputForm()
         {
             InitializeComponent();
+            tabControl.Selecting += TabControl_Selecting;
+
+            // Customer page
             UpdateNamesAndSurnamesColumn();
-            cbxCustomerSearch.DataSource = Program.DbContext[typeof(Customer).Name];
+            txtCustomerName.DataBindings.Add("Text", customer, "Name");
+            txtCustomerSurname.DataBindings.Add("Text", customer, "Surname");
+            txtCustomerEmail.DataBindings.Add("Text", customer, "Email");
+            txtCustomerPhoneNr.DataBindings.Add("Text", customer, "PhoneNumber");
+
+            BindingSource customerBindingSource = new BindingSource();
+            customerBindingSource.DataSource = Program.DbContext.DataSet;
+            customerBindingSource.DataMember = typeof(Customer).Name;
+
+            cbxCustomerSearch.DataSource = customerBindingSource;
             cbxCustomerSearch.DisplayMember = "NameAndSurname";
             cbxCustomerSearch.ValueMember = "Id";
 
@@ -42,13 +58,30 @@ namespace IkMeKursaDarbs.Forms
             cityBindingSource.DataMember = Program.DbContext[typeof(Country).Name, typeof(City).Name].RelationName;
             cbxCustomerCity.DataSource = cityBindingSource;
             cbxCustomerCity.DisplayMember = "Name";
+
+            // Veh info page
+            BindingSource vehBindingSource = new BindingSource();
+            vehBindingSource.DataSource = customerBindingSource;
+            vehBindingSource.DataMember = Program.DbContext[typeof(Customer).Name, typeof(Vehicle).Name].RelationName;
+            cbxVinSearch.DataSource = vehBindingSource;
+            cbxVinSearch.DisplayMember = "VinNumber";
+            txtVehicleModel.DataBindings.Add("Text", customerVehicle, "Model");
+            txtVehicleBrand.DataBindings.Add("Text", customerVehicle, "Brand");
+            txtVehicleVin.DataBindings.Add("Text", customerVehicle, "VinNumber");
+            // Service page
+        }
+
+        private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (!IsVehPageEnabled && e.TabPage == tabVehicleInformation) e.Cancel = true;
+            if (!IsServicePageEnabled && e.TabPage == tabService) e.Cancel = true;
         }
 
         private void btnAddCustomer_Click(object sender, EventArgs e)
         {
             if (cbxCustomerSearch.SelectedItem is null) return;
             var rowCustomer  = (cbxCustomerSearch.SelectedItem as DataRowView).Row.GetRowAsType<Customer>();
-            txtPhoneNr.Text = rowCustomer.PhoneNumber;
+            txtCustomerPhoneNr.Text = rowCustomer.PhoneNumber;
             txtCustomerEmail.Text = rowCustomer.Email;
             txtCustomerName.Text = rowCustomer.Name;
             txtCustomerSurname.Text = rowCustomer.Surname;
@@ -61,6 +94,7 @@ namespace IkMeKursaDarbs.Forms
                 SelectByPrimaryKey(cbxCustomerCountry, customerCountry.Id);
                 SelectByPrimaryKey(cbxCustomerCity, customerCity.Id);
             }
+            SelectedCustomer = cbxCustomerSearch.SelectedIndex;
             customer = rowCustomer;
         }
         private void SelectByPrimaryKey(System.Windows.Forms.ComboBox cbox, int pk)
@@ -101,6 +135,7 @@ namespace IkMeKursaDarbs.Forms
                 return;
             }
             customerAddress.CityId = customerCity.Id;
+            customerAddress.Street = txtCustomerStreet.Text;
 
             // Validate country and city
             if (ValidateProperty<Country>(customerCountry, c => c.Name)) return;
@@ -112,17 +147,20 @@ namespace IkMeKursaDarbs.Forms
             if (ValidateProperty<Customer>(customer, c => c.PhoneNumber)) return;
             if (ValidateProperty<Customer>(customer, c => c.Email)) return;
             
-            if (customer.Id == 0)
+            // Add address if it has pk
+            if (customerAddress.Id <= 0)
             {
-                // Add
                 Program.DbContext.DataSet.Add<Address>(customerAddress);
                 Program.DbContext.Update<Address>();
-                customer.AddressId = customerAddress.Id;
+            }
+
+
+            if (customerAddress.Id <= 0)
+            {
                 Program.DbContext.DataSet.Add<Customer>(customer);
                 Program.DbContext.Update<Customer>();
-                UpdateNamesAndSurnamesColumn();
-                return;
             }
+
             // Update
             Program.DbContext.DataSet.Update<Address>(customerAddress);
             Program.DbContext.Update<Address>();
@@ -130,6 +168,9 @@ namespace IkMeKursaDarbs.Forms
             Program.DbContext.DataSet.Update<Customer>(customer);
             Program.DbContext.Update<Customer>();
             UpdateNamesAndSurnamesColumn();
+            cbxCustomerSearch.SelectedIndex = SelectedCustomer < 0 ? cbxCustomerSearch.Items.Count - 1 : SelectedCustomer;
+            IsVehPageEnabled = true;
+            tabControl.SelectedTab = tabVehicleInformation;
         }
         private void UpdateNamesAndSurnamesColumn()
         {
@@ -198,6 +239,51 @@ namespace IkMeKursaDarbs.Forms
         {
             if (cbxCustomerCity.SelectedItem is null) return;
             customerCity = (cbxCustomerCity.SelectedItem as DataRowView).Row.GetRowAsType<City>();
+        }
+
+        private void btnAddVeh_Click(object sender, EventArgs e)
+        {
+            if(cbxVinSearch.SelectedItem is null) return;
+            var vehInfo = (cbxVinSearch.SelectedItem as DataRowView).Row.GetRowAsType<Vehicle>();
+            txtVehicleVin.Text = vehInfo.VinNumber;
+            txtVehicleBrand.Text = vehInfo.Brand;
+            txtVehicleModel.Text = vehInfo.Model;
+        }
+
+        private void btnCreateOrUpdateVeh_Click(object sender, EventArgs e)
+        {
+            // Validate country and city
+
+            // Add address if it has pk
+            if (customerVehicle.Id <= 0)
+            {
+                Program.DbContext.DataSet.Add<Vehicle>(customerVehicle);
+                Program.DbContext.Update<Vehicle>();
+            }
+
+            // Update
+            Program.DbContext.DataSet.Update<Vehicle>(customerVehicle);
+            Program.DbContext.Update<Vehicle>();
+            customer.AddressId = customerAddress.Id;
+            Program.DbContext.DataSet.Update<Customer>(customer);
+            Program.DbContext.Update<Customer>();
+            UpdateNamesAndSurnamesColumn();
+            IsVehPageEnabled = true;
+            tabControl.SelectedTab = tabVehicleInformation;
+        }
+
+        private void btnRemoveCustomer_Click(object sender, EventArgs e)
+        {
+            customer.Id = 0;
+            SelectedCustomer = -1;
+            cbxCustomerSearch.SelectedIndex = -1;
+            txtCustomerEmail.Text = string.Empty;
+            txtCustomerPhoneNr.Text = string.Empty;
+            txtCustomerStreet.Text = string.Empty;
+            txtCustomerSurname.Text = string.Empty;
+            txtCustomerName.Text = string.Empty;
+            cbxCustomerCountry.SelectedIndex = -1;
+            cbxCustomerCity.SelectedIndex = -1;
         }
     }
 }
