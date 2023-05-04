@@ -100,6 +100,17 @@ namespace IkMeKursaDarbs
             this.DataSet.Add(new Vehicle() { VinNumber = "5678", Brand = "BMW", Model = "530i", OwnerId = this.DataSet.Query<Customer>(c => c.Name == "Name1" && c.Surname == "Surname1").First().Id });
             this.DataSet.Add(new Vehicle() { VinNumber = "1111", Brand = "BMW", Model = "520i", OwnerId = this.DataSet.Query<Customer>(c => c.Name == "Name2" && c.Surname == "Surname2").First().Id });
             this.Update<Vehicle>();
+
+            this.DataSet.Add(new Specialization() { Name = "TestSpec" });
+            this.DataSet.Add(new Specialization() { Name = "TestSpec2" });
+            this.Update<Specialization>();
+            this.DataSet.Add(new Mechanic() { Name = "Name1", Surname = "Surname1", UserId = this.DataSet.Query<AppUser>(c => c.Username == "admin").First().Id });
+            this.DataSet.Add(new Mechanic() { Name = "Name2", Surname = "Surname2", UserId = this.DataSet.Query<AppUser>(c => c.Username == "admin").First().Id });
+            this.Update<Mechanic>();
+            this.DataSet.Add(new MechanicSpecialization() { SpecializationId = this.DataSet.Query<Specialization>(c => c.Name == "TestSpec").First().Id, MechanicId = this.DataSet.Query<Mechanic>(c => c.Name == "Name1").First().Id });
+            this.DataSet.Add(new MechanicSpecialization() { SpecializationId = this.DataSet.Query<Specialization>(c => c.Name == "TestSpec2").First().Id, MechanicId = this.DataSet.Query<Mechanic>(c => c.Name == "Name1").First().Id });
+            this.DataSet.Add(new MechanicSpecialization() { SpecializationId = this.DataSet.Query<Specialization>(c => c.Name == "TestSpec2").First().Id, MechanicId = this.DataSet.Query<Mechanic>(c => c.Name == "Name2").First().Id });
+            this.Update<MechanicSpecialization>();
         }
         public async Task CreateSchema<TDataType>(bool fillDataSet, bool createNewTable = false, CancellationToken cancellationToken = default(CancellationToken)) where TDataType : IdEntity
         {

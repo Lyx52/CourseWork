@@ -45,7 +45,7 @@ namespace IkMeKursaDarbs
                 lblError.Text = "Autentifikācija neveiksmīga!";
                 return;
             }
-            OnLoggedIn.Invoke(new AppUser());
+            OnLoggedIn.Invoke(user);
             this.Close();
         }
     }

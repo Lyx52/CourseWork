@@ -16,15 +16,16 @@ namespace IkMeKursaDarbs.Data.Entities
         [TableRelation(typeof(MechanicTask), false)]
         public int ParentTaskId { get; set; }
         [Constraint("NOT NULL")]
-        [TableRelation(typeof(Mechanic), false)]
-        public int MechanicId { get; set; }
+        [TableRelation(typeof(MechanicSpecialization), false)]
+        public int MechSpecId { get; set; }
         [Constraint("NOT NULL")]
         [TableRelation(typeof(Vehicle), false)]
         public int VehicleId { get; set; }
 
         [Constraint("NOT NULL")]
-        public int Created { get; set; }
+        public long Created { get; set; }
         [Constraint("DEFAULT -1")]
-        public int Due { get; set; }
+        public long Due { get; set; }
+        public bool Completed { get; set; } = false;
     }
 }

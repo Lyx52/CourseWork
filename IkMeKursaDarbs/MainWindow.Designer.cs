@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.mainContainer = new System.Windows.Forms.SplitContainer();
-            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
-            this.actionTabs = new System.Windows.Forms.TabControl();
             this.lstMainMenu = new System.Windows.Forms.ListView();
+            this.actionTabs = new System.Windows.Forms.TabControl();
+            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             ((System.ComponentModel.ISupportInitialize)(this.mainContainer)).BeginInit();
             this.mainContainer.Panel1.SuspendLayout();
             this.mainContainer.Panel2.SuspendLayout();
@@ -58,10 +58,19 @@
             this.mainContainer.TabIndex = 2;
             this.mainContainer.Visible = false;
             // 
-            // fileSystemWatcher1
+            // lstMainMenu
             // 
-            this.fileSystemWatcher1.EnableRaisingEvents = true;
-            this.fileSystemWatcher1.SynchronizingObject = this;
+            this.lstMainMenu.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstMainMenu.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstMainMenu.HideSelection = false;
+            this.lstMainMenu.Location = new System.Drawing.Point(0, 0);
+            this.lstMainMenu.MultiSelect = false;
+            this.lstMainMenu.Name = "lstMainMenu";
+            this.lstMainMenu.Size = new System.Drawing.Size(135, 518);
+            this.lstMainMenu.TabIndex = 0;
+            this.lstMainMenu.UseCompatibleStateImageBehavior = false;
+            this.lstMainMenu.View = System.Windows.Forms.View.List;
+            this.lstMainMenu.SelectedIndexChanged += new System.EventHandler(this.lstMainMenu_SelectedIndexChanged);
             // 
             // actionTabs
             // 
@@ -72,18 +81,10 @@
             this.actionTabs.Size = new System.Drawing.Size(1149, 518);
             this.actionTabs.TabIndex = 0;
             // 
-            // lstMainMenu
+            // fileSystemWatcher1
             // 
-            this.lstMainMenu.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstMainMenu.HideSelection = false;
-            this.lstMainMenu.Location = new System.Drawing.Point(0, 0);
-            this.lstMainMenu.MultiSelect = false;
-            this.lstMainMenu.Name = "lstMainMenu";
-            this.lstMainMenu.Size = new System.Drawing.Size(135, 518);
-            this.lstMainMenu.TabIndex = 0;
-            this.lstMainMenu.UseCompatibleStateImageBehavior = false;
-            this.lstMainMenu.View = System.Windows.Forms.View.List;
-            this.lstMainMenu.SelectedIndexChanged += new System.EventHandler(this.lstMainMenu_SelectedIndexChanged);
+            this.fileSystemWatcher1.EnableRaisingEvents = true;
+            this.fileSystemWatcher1.SynchronizingObject = this;
             // 
             // MainWindow
             // 

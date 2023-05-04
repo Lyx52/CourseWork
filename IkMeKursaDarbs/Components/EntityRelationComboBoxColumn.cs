@@ -34,5 +34,6 @@ namespace IkMeKursaDarbs.Components
             return column;
         }
 
+
     }
 }

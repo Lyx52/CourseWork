@@ -61,7 +61,7 @@ namespace IkMeKursaDarbs.Components
         {
             // Add new role
             UserRole role = new UserRole();
-            role.RoleName = this.txtRoleName.Text;
+            role.RoleName = this.txtSearchRoleName.Text;
             role.Premissions = GetSelectedPremissions();
             Program.DbContext.DataSet.Add<UserRole>(role);
             Program.DbContext.Update<UserRole>();
@@ -71,8 +71,8 @@ namespace IkMeKursaDarbs.Components
         {
             if (this._selectedRole is null) return;
             // Update role
-            if (!string.IsNullOrEmpty(this.txtRoleName.Text))
-                this._selectedRole.RoleName = this.txtRoleName.Text;
+            if (!string.IsNullOrEmpty(this.txtSearchRoleName.Text))
+                this._selectedRole.RoleName = this.txtSearchRoleName.Text;
             this._selectedRole.Premissions = GetSelectedPremissions();
             Program.DbContext.DataSet.Update<UserRole>(this._selectedRole);
             Program.DbContext.Update<UserRole>();

@@ -20,7 +20,7 @@ namespace IkMeKursaDarbs.Data
             DataTable table = set.Tables[typeof(TDataType).Name];
             var entityToRemove = table.Select($"Id = {value.Id}").FirstOrDefault();
             if (entityToRemove is null) return;
-            table.Rows.Remove(entityToRemove);
+            entityToRemove.Delete();
         }
         public static void Update<TDataType>(this DataSet set, TDataType value) where TDataType : IdEntity
         {

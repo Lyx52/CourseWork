@@ -8,10 +8,9 @@ namespace IkMeKursaDarbs.Data.Enums
 {
     public enum RolePremissionType
     {
-        MANAGE_USERS_AND_ROLES = 1,
-        MANAGE_DEPARTMENTS = 2,
-        SCHEDULE_MANAGER = 4,
-        APPOINTMENT_MANAGER = 8,
-        MANAGE_PATIENTS = 16,
+        MANAGE_USERS = 1,
+        MANAGE_MECHANICS = 2,
+        MANAGE_INVENTORY = 4,
+        ADD_MECHANIC_TASKS = 8
     }
 }

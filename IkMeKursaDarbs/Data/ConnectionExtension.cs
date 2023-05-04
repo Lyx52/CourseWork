@@ -17,6 +17,7 @@ namespace IkMeKursaDarbs.Data
         public static NpgsqlDbType GetPostgresType(Type type)
         {
             if (type == typeof(int)) return NpgsqlDbType.Integer;
+            if (type == typeof(long)) return NpgsqlDbType.Bigint;
             if (type == typeof(string)) return NpgsqlDbType.Text;
             if (type == typeof(bool)) return NpgsqlDbType.Boolean;
             if (type == typeof(float)) return NpgsqlDbType.Real;
@@ -30,6 +31,7 @@ namespace IkMeKursaDarbs.Data
             if (type == typeof(bool)) return 1;
             if (type == typeof(float)) return 4;
             if (type == typeof(double)) return 8;
+            if (type == typeof(long)) return 8;
 
             throw new ArgumentException($"No Postgres type mapping for type {type}");
         }
@@ -50,12 +52,12 @@ namespace IkMeKursaDarbs.Data
             {
                 // Izdabūt atribūta custom ierbobežojumu/tipu
                 var constraintAttrib = prop.GetCustomAttribute<ConstraintAttribute>();
-                columnsConstraints.Add($"{prop.Name} {constraintAttrib.DataType ?? GetPostgresTypeStr(prop.PropertyType)} {constraintAttrib.Constraint ?? string.Empty}");
+                columnsConstraints.Add($"{prop.Name} {constraintAttrib?.DataType ?? GetPostgresTypeStr(prop.PropertyType)} {constraintAttrib?.Constraint ?? string.Empty}");
                 insertParameters.Add(new NpgsqlParameter(prop.Name, GetPostgresType(prop.PropertyType), GetPostgresTypeSize(prop.PropertyType), prop.Name));
                 updateParameters.Add(new NpgsqlParameter(prop.Name, GetPostgresType(prop.PropertyType), GetPostgresTypeSize(prop.PropertyType), prop.Name));
 
                 // Visas kolonas kas nav primārā atslēga
-                if (constraintAttrib.Constraint.ToUpper() != "PRIMARY KEY")
+                if (constraintAttrib != null && constraintAttrib.Constraint.ToUpper() != "PRIMARY KEY")
                 {
                     columns.Add(prop.Name);
                 }

@@ -1,4 +1,6 @@
-﻿using IkMeKursaDarbs.Data.Entities;
+﻿using IkMeKursaDarbs.Data;
+using IkMeKursaDarbs.Data.Entities;
+using IkMeKursaDarbs.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,19 +16,10 @@ namespace IkMeKursaDarbs
         public static AppUser CurrentUser
         {
             get => _currentUser;
-            set {
-                _currentUser = value;
-                _lastActivityTime = DateTime.MinValue;
-                if (_currentUser != null)
-                {
-                    _currentUser.Password = string.Empty;
-                    _lastActivityTime = DateTime.UtcNow;
-                }
-
-            }
         }
+        private static UserRole _userRole;
         private static DateTime _lastActivityTime;
-        private static AppUser _currentUser;
+        public static AppUser _currentUser;
         public static void LoginPrompt(Form mainForm)
         {
             LoginForm loginForm = new LoginForm();
@@ -36,12 +29,16 @@ namespace IkMeKursaDarbs
         }
         public static void OnLogin(AppUser user)
         {
-            CurrentUser = user;
+            user.Password = string.Empty;
+            _currentUser = user;
+            _userRole = Program.DbContext.DataSet.Query<UserRole>(r => r.Id == _currentUser.RoleId).FirstOrDefault();
             OnLoggedIn.Invoke();
         }
-        public static void Logout() => CurrentUser = null;
-        // Lietotājs nav autentificējies ja nav lietotājs vai nav atjaunots aktivitātes laiks
-        public static bool IsAuthenticated() => CurrentUser != null && (DateTime.UtcNow - _lastActivityTime).TotalMinutes > 5;
-        public static void UpdateActivity() => _lastActivityTime = DateTime.UtcNow;
+        public static void Logout() => _currentUser = null;
+        public static bool IsAuthenticated() => CurrentUser != null && _userRole != null;
+        public static bool HasAccess(RolePremissionType premission)
+        {
+            return IsAuthenticated() && (_userRole.Premissions & (int)RolePremissionType.MANAGE_USERS) == (int)RolePremissionType.MANAGE_USERS;
+        }
     }
 }

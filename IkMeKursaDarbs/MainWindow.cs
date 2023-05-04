@@ -1,5 +1,7 @@
 ﻿using IkMeKursaDarbs.Components;
+using IkMeKursaDarbs.Data;
 using IkMeKursaDarbs.Data.Entities;
+using IkMeKursaDarbs.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +20,16 @@ namespace IkMeKursaDarbs
         public MainWindow()
         {
             InitializeComponent();
+            UserContext.OnLoggedIn += OnLoggedIn;
+        }
+        public void OnLoggedIn()
+        {
+            this.mainContainer.Enabled = true;
+            this.mainContainer.Visible = true;
+            AddMenuOptions();
+        }
+        public void AddMenuOptions()
+        {
             // Noklusēti viesiem lietotājiem ir dashboard
             lstMainMenu.Items.Add(
                 new ListViewItem
@@ -25,30 +37,38 @@ namespace IkMeKursaDarbs
                     Text = "Dashboard",
                     Tag = new List<ComponentTab>
                     {
-                        new ComponentTab("Dashboard", new DashboardComponent())
+                                    new ComponentTab("Dashboard", new DashboardComponent())
                     }
                 });
-            lstMainMenu.Items.Add(
-                new ListViewItem
-                {
-                    Text = "User managment",
-                    Tag = new List<ComponentTab>
+            if (UserContext.HasAccess(RolePremissionType.MANAGE_USERS))
+            {
+                lstMainMenu.Items.Add(
+                    new ListViewItem
                     {
-                        new ComponentTab("Roles", new RoleManagmentComponent()),
-                        new ComponentTab("Users", new UserManagmentComponent())
-                    }
-                });
-            lstMainMenu.Items.Add(
-                new ListViewItem
-                {
-                    Text = "Mechanic managment",
-                    Tag = new List<ComponentTab>
+                        Text = "User managment",
+                        Tag = new List<ComponentTab>
+                        {
+                                                    new ComponentTab("Roles", new RoleManagmentComponent()),
+                                                    new ComponentTab("Users", new UserManagmentComponent())
+                        }
+                    });
+            }
+            if (UserContext.HasAccess(RolePremissionType.MANAGE_MECHANICS))
+            {
+                lstMainMenu.Items.Add(
+                    new ListViewItem
                     {
-                        new ComponentTab("Mechanics", new MechanicManagmentComponent()),
-                        new ComponentTab("Specializations", new SpecializationManagmentComponent())
-                    }
-                });
-            lstMainMenu.Items.Add(
+                        Text = "Mechanic managment",
+                        Tag = new List<ComponentTab>
+                        {
+                                        new ComponentTab("Mechanics", new MechanicManagmentComponent()),
+                                        new ComponentTab("Specializations", new SpecializationManagmentComponent())
+                        }
+                    });
+            }
+            if (UserContext.HasAccess(RolePremissionType.MANAGE_INVENTORY))
+            {
+                lstMainMenu.Items.Add(
                 new ListViewItem
                 {
                     Text = "Inventory managment",
@@ -58,12 +78,8 @@ namespace IkMeKursaDarbs
                         new ComponentTab("Manufacturers", new ManufacturerManagmentComponent())
                     }
                 });
-            UserContext.OnLoggedIn += OnLoggedIn;
-        }
-        public void OnLoggedIn()
-        {
-            this.mainContainer.Enabled = true;
-            this.mainContainer.Visible = true;
+            }
+            
         }
         public void Logout()
         {
@@ -74,13 +90,11 @@ namespace IkMeKursaDarbs
         }
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            this.mainContainer.Enabled = true;
-            this.mainContainer.Visible = true;
-            //// Lietotājs jau ir autentificējies
-            //if (UserContext.IsAuthenticated())
-            //    return;
-            //// Pieprasa autentificēties, savādāk beidz programmu.
-            //UserContext.LoginPrompt(this);
+            // Lietotājs jau ir autentificējies
+            if (UserContext.IsAuthenticated())
+                return;
+            // Pieprasa autentificēties, savādāk beidz programmu.
+            UserContext.LoginPrompt(this);
         }
 
         private void lstMainMenu_SelectedIndexChanged(object sender, EventArgs e)
@@ -90,7 +104,5 @@ namespace IkMeKursaDarbs
             actionTabs.TabPages.Clear();
             actionTabs.TabPages.AddRange(controls.ToArray());
         }
-
-
     }
 }

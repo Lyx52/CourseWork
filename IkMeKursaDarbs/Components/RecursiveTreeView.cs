@@ -28,9 +28,13 @@ namespace IkMeKursaDarbs.Components
             this.KeyDown += RecursiveTreeView_KeyDown;
             this.AfterLabelEdit += RecursiveTreeView_AfterLabelEdit;
             this.NodeMouseDoubleClick += RecursiveTreeView_NodeMouseDoubleClick;
+            RefreshNodes();
+        }
+        public void RefreshNodes()
+        {
+            this.Nodes.Clear();
             PopulateNodes(-1, this.Nodes);
         }
-
 
         private void RecursiveTreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
@@ -53,7 +57,10 @@ namespace IkMeKursaDarbs.Components
                 nodes.Add(node);
 
                 // Recursively add child nodes for the new node
-                PopulateNodes((int)row["Id"], node.Nodes);
+                if (row["Id"].GetType() == typeof(int))
+                {
+                    PopulateNodes((int)row["Id"], node.Nodes);
+                }
             }
         }
         private void RecursiveTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)

@@ -67,20 +67,19 @@
             this.trwPanel = new System.Windows.Forms.Panel();
             this.btnTaskSave = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.cbxTaskMechanic = new System.Windows.Forms.ComboBox();
+            this.cbxTaskSpec = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
             this.txtTaskName = new System.Windows.Forms.TextBox();
             this.dtpTaskDue = new System.Windows.Forms.DateTimePicker();
             this.label12 = new System.Windows.Forms.Label();
-            this.dtpTaskCreated = new System.Windows.Forms.DateTimePicker();
-            this.label11 = new System.Windows.Forms.Label();
             this.txtTaskDescription = new System.Windows.Forms.RichTextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.btnAddNewTask = new System.Windows.Forms.Button();
             this.directoryEntry1 = new System.DirectoryServices.DirectoryEntry();
-            this.cbxTaskSpec = new System.Windows.Forms.ComboBox();
-            this.cbxTaskMechanic = new System.Windows.Forms.ComboBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
+            this.lblNodeName = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabCustomer.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -456,6 +455,7 @@
             // 
             // tabService
             // 
+            this.tabService.Controls.Add(this.lblNodeName);
             this.tabService.Controls.Add(this.trwPanel);
             this.tabService.Controls.Add(this.btnTaskSave);
             this.tabService.Controls.Add(this.groupBox3);
@@ -483,6 +483,7 @@
             this.btnTaskSave.TabIndex = 3;
             this.btnTaskSave.Text = "Save";
             this.btnTaskSave.UseVisualStyleBackColor = true;
+            this.btnTaskSave.Click += new System.EventHandler(this.btnTaskSave_Click);
             // 
             // groupBox3
             // 
@@ -494,8 +495,6 @@
             this.groupBox3.Controls.Add(this.txtTaskName);
             this.groupBox3.Controls.Add(this.dtpTaskDue);
             this.groupBox3.Controls.Add(this.label12);
-            this.groupBox3.Controls.Add(this.dtpTaskCreated);
-            this.groupBox3.Controls.Add(this.label11);
             this.groupBox3.Controls.Add(this.txtTaskDescription);
             this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Location = new System.Drawing.Point(352, 55);
@@ -504,6 +503,46 @@
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Task information";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(231, 96);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(129, 17);
+            this.label18.TabIndex = 16;
+            this.label18.Text = "Assign mechanic";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(6, 96);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(148, 17);
+            this.label17.TabIndex = 15;
+            this.label17.Text = "Req. Specialization";
+            // 
+            // cbxTaskMechanic
+            // 
+            this.cbxTaskMechanic.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbxTaskMechanic.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbxTaskMechanic.FormattingEnabled = true;
+            this.cbxTaskMechanic.Location = new System.Drawing.Point(234, 116);
+            this.cbxTaskMechanic.Name = "cbxTaskMechanic";
+            this.cbxTaskMechanic.Size = new System.Drawing.Size(189, 24);
+            this.cbxTaskMechanic.TabIndex = 14;
+            // 
+            // cbxTaskSpec
+            // 
+            this.cbxTaskSpec.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbxTaskSpec.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbxTaskSpec.FormattingEnabled = true;
+            this.cbxTaskSpec.Location = new System.Drawing.Point(9, 116);
+            this.cbxTaskSpec.Name = "cbxTaskSpec";
+            this.cbxTaskSpec.Size = new System.Drawing.Size(197, 24);
+            this.cbxTaskSpec.TabIndex = 13;
             // 
             // label13
             // 
@@ -524,7 +563,7 @@
             // 
             // dtpTaskDue
             // 
-            this.dtpTaskDue.Location = new System.Drawing.Point(6, 320);
+            this.dtpTaskDue.Location = new System.Drawing.Point(9, 260);
             this.dtpTaskDue.Name = "dtpTaskDue";
             this.dtpTaskDue.Size = new System.Drawing.Size(200, 23);
             this.dtpTaskDue.TabIndex = 11;
@@ -533,29 +572,11 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(6, 300);
+            this.label12.Location = new System.Drawing.Point(9, 240);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(74, 17);
             this.label12.TabIndex = 10;
             this.label12.Text = "Due date";
-            // 
-            // dtpTaskCreated
-            // 
-            this.dtpTaskCreated.CausesValidation = false;
-            this.dtpTaskCreated.Location = new System.Drawing.Point(6, 254);
-            this.dtpTaskCreated.Name = "dtpTaskCreated";
-            this.dtpTaskCreated.Size = new System.Drawing.Size(200, 23);
-            this.dtpTaskCreated.TabIndex = 9;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(6, 234);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(65, 17);
-            this.label11.TabIndex = 8;
-            this.label11.Text = "Created";
             // 
             // txtTaskDescription
             // 
@@ -585,45 +606,13 @@
             this.btnAddNewTask.UseVisualStyleBackColor = true;
             this.btnAddNewTask.Click += new System.EventHandler(this.btnAddNew_Click);
             // 
-            // cbxTaskSpec
+            // lblNodeName
             // 
-            this.cbxTaskSpec.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbxTaskSpec.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbxTaskSpec.FormattingEnabled = true;
-            this.cbxTaskSpec.Location = new System.Drawing.Point(9, 116);
-            this.cbxTaskSpec.Name = "cbxTaskSpec";
-            this.cbxTaskSpec.Size = new System.Drawing.Size(197, 24);
-            this.cbxTaskSpec.TabIndex = 13;
-            // 
-            // cbxTaskMechanic
-            // 
-            this.cbxTaskMechanic.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbxTaskMechanic.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbxTaskMechanic.FormattingEnabled = true;
-            this.cbxTaskMechanic.Location = new System.Drawing.Point(234, 116);
-            this.cbxTaskMechanic.Name = "cbxTaskMechanic";
-            this.cbxTaskMechanic.Size = new System.Drawing.Size(189, 24);
-            this.cbxTaskMechanic.TabIndex = 14;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(6, 96);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(148, 17);
-            this.label17.TabIndex = 15;
-            this.label17.Text = "Req. Specialization";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(231, 96);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(129, 17);
-            this.label18.TabIndex = 16;
-            this.label18.Text = "Assign mechanic";
+            this.lblNodeName.AutoSize = true;
+            this.lblNodeName.Location = new System.Drawing.Point(361, 15);
+            this.lblNodeName.Name = "lblNodeName";
+            this.lblNodeName.Size = new System.Drawing.Size(0, 17);
+            this.lblNodeName.TabIndex = 5;
             // 
             // ServiceInputForm
             // 
@@ -643,6 +632,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabService.ResumeLayout(false);
+            this.tabService.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
@@ -688,8 +678,6 @@
         private System.Windows.Forms.RichTextBox txtTaskDescription;
         private System.Windows.Forms.DateTimePicker dtpTaskDue;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.DateTimePicker dtpTaskCreated;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox txtTaskName;
         private System.Windows.Forms.Button btnTaskSave;
@@ -704,5 +692,6 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ComboBox cbxTaskMechanic;
         private System.Windows.Forms.ComboBox cbxTaskSpec;
+        private System.Windows.Forms.Label lblNodeName;
     }
 }

@@ -27,14 +27,20 @@ namespace IkMeKursaDarbs.Forms
         private Vehicle customerVehicle = new Vehicle();
         
         // Tasks
-        private Mechanic taskMechanic = new Mechanic();
-        private Specialization taskReqSpec = new Specialization();
         private MechanicTask task = new MechanicTask();
-
-        bool IsVehPageEnabled = false;
-        bool IsServicePageEnabled = false;
-        int SelectedCustomer = -1;
-        int SelectedVehicle = -1;
+        private DataView mechComboboxView = new DataView(Program.DbContext[typeof(Mechanic).Name]); 
+        private bool IsVehPageEnabled = false;
+        private bool IsServicePageEnabled = false;
+        private int SelectedCustomer = -1;
+        private int SelectedVehicle = -1;
+        private MechanicTask _parentTask = null;
+        private TreeNode _selectedNode = null;
+        private RecursiveTreeView<MechanicTask> trwTasks;
+        private DateTime dueDate
+        {
+            get => new DateTime(task.Due);
+            set => task.Due = value.Ticks;
+        }
         public ServiceInputForm()
         {
             InitializeComponent();
@@ -80,14 +86,64 @@ namespace IkMeKursaDarbs.Forms
             txtVehicleVin.DataBindings.Add("Text", customerVehicle, "VinNumber");
 
             // Service page
-            var trwTasks = RecursiveTreeView<MechanicTask>.Create<MechanicTask>(t => t.ParentTaskId, t => t.Name);
-            trwTasks.Dock = DockStyle.Fill;
-            trwPanel.Controls.Add(trwTasks);
-            txtTaskName.DataBindings.Add("Text", task, "Name");
-            txtTaskDescription.DataBindings.Add("Text", task, "Description");
+            this.trwTasks = RecursiveTreeView<MechanicTask>.Create<MechanicTask>(t => t.ParentTaskId, t => t.Name);
+            this.trwTasks.Dock = DockStyle.Fill;
+            this.trwTasks.NodeMouseClick += TrwTasks_NodeMouseClick;
+            trwPanel.Controls.Add(this.trwTasks);
+            dueDate = DateTime.UtcNow;
+            cbxTaskMechanic.DataSource = mechComboboxView;
+            cbxTaskMechanic.DisplayMember = "Name";
+            cbxTaskMechanic.ValueMember = "Id";
 
-            BindingSource reqSpecBindingSource = new BindingSource();
-            reqSpecBindingSource.DataSource = Program.DbContext[typeof(Specialization).Name, typeof(Mechanic).Name].RelationName;
+            cbxTaskSpec.DataSource = Program.DbContext[typeof(Specialization).Name];
+            cbxTaskSpec.DisplayMember = "Name";
+            cbxTaskSpec.ValueMember = "Id";
+            cbxTaskSpec.SelectedIndexChanged += (sender, e) =>
+            {
+                int selectedSpecializationId = (int)cbxTaskSpec.SelectedValue;
+                var mechanics = Program.DbContext.DataSet.Query<MechanicSpecialization>(ms => ms.SpecializationId == selectedSpecializationId).Select(ms => ms.MechanicId);
+                if (mechanics.Any())
+                {
+                    mechComboboxView.RowFilter = $"Id IN ({string.Join(",", mechanics)})";
+                } else
+                {
+                    // Lai nerāda nevienu vērtību
+                    mechComboboxView.RowFilter = "Id = -1";
+                }
+            };
+            this.trwTasks.LostFocus += TrwTasks_LostFocus;
+        }
+
+        private void TrwTasks_LostFocus(object sender, EventArgs e)
+        {
+            lblNodeName.Text = this.task.Name;
+        }
+
+        private void TrwTasks_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node == null) return;
+            var selectedTask = (e.Node.Tag as DataRow).GetRowAsType<MechanicTask>();
+
+            txtTaskName.Text = selectedTask.Name;
+            txtTaskDescription.Text = selectedTask.Description;
+            dtpTaskDue.Value = selectedTask.Due > 0 ? new DateTime(selectedTask.Due) : DateTime.UtcNow;
+            var mechSpec = Program.DbContext.DataSet.Query<MechanicSpecialization>(s => s.Id == selectedTask.MechSpecId).FirstOrDefault();
+            if (mechSpec != null)
+            {
+                SelectByPrimaryKey(cbxTaskSpec, mechSpec.SpecializationId);
+                SelectByPrimaryKey(cbxTaskMechanic, mechSpec.MechanicId);
+            } else
+            {
+                cbxTaskSpec.SelectedIndex = 0;
+                cbxTaskMechanic.SelectedIndex = 0;
+            }
+            this.task = selectedTask;
+            lblNodeName.Text = this.task.Name;
+            this._selectedNode = e.Node;
+            if (e.Node.Parent != null && e.Node.Parent.Tag != null)
+            {
+                _parentTask = (e.Node.Parent.Tag as DataRow).GetRowAsType<MechanicTask>();
+            }
         }
 
         private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
@@ -276,6 +332,12 @@ namespace IkMeKursaDarbs.Forms
 
         private void btnCreateOrUpdateVeh_Click(object sender, EventArgs e)
         {
+
+            if (ValidateProperty<Vehicle>(customerVehicle, v => v.Model)) return;
+            if (ValidateProperty<Vehicle>(customerVehicle, v => v.VinNumber)) return;
+            if (ValidateProperty<Vehicle>(customerVehicle, v => v.Brand)) return;
+
+
             // Add vehicle if it has pk
             if (customerVehicle.Id <= 0)
             {
@@ -318,11 +380,68 @@ namespace IkMeKursaDarbs.Forms
             txtVehicleVin.Text = string.Empty;
             btnCreateOrUpdateVeh.Text = "Create vehicle";
         }
-
+        private void AddOrUpdateNewTask(int parentId)
+        {
+            if (cbxTaskSpec.SelectedItem is null)
+            {
+                ShowValidationError("Mechanic Spec. not selected!");
+                return;
+            }
+            if (cbxTaskMechanic.SelectedItem is null)
+            {
+                ShowValidationError("Mechanic not selected!");
+                return;
+            }
+            var spec = (cbxTaskSpec.SelectedItem as DataRowView).Row.GetRowAsType<Specialization>();
+            var mechanic = (cbxTaskMechanic.SelectedItem as DataRowView).Row.GetRowAsType<Mechanic>();
+            var mechSpec = Program.DbContext.DataSet.Query<MechanicSpecialization>(ms => ms.MechanicId == mechanic.Id && ms.SpecializationId == spec.Id).FirstOrDefault();
+            if (mechSpec is null)
+            {
+                ShowValidationError("Mechanic does not have this specialization!");
+                return;
+            }
+            dueDate = dtpTaskDue.Value;
+            task.Description = txtTaskDescription.Text;
+            task.Name = txtTaskName.Text;
+            if (ValidateProperty<MechanicTask>(task, t => t.Name)) return;
+            if (ValidateProperty<MechanicTask>(task, t => t.Description)) return;
+            if (ValidateProperty<MechanicTask>(task, t => t.Due > 0)) return;
+            task.Created = DateTime.UtcNow.Ticks;
+            task.MechSpecId = mechSpec.Id;
+            if (task.Id <= 0)
+            {
+                if (_selectedNode != null && _selectedNode.Tag != null) 
+                    (_selectedNode.Tag as DataRow).Delete();
+                Program.DbContext[typeof(MechanicTask).Name].AcceptChanges();
+                task.VehicleId = customerVehicle.Id;
+                task.ParentTaskId = parentId;
+                Program.DbContext.DataSet.Add(task);
+            } else
+            {
+                Program.DbContext.DataSet.Update(task);
+            }
+            try
+            {
+                Program.DbContext.Update<MechanicTask>();
+            } catch (Exception e)
+            {
+                MessageBox.Show("Must fill out each of the tasks before saving!", "Saving error!", MessageBoxButtons.OK);
+            }
+        }
         private void btnAddNew_Click(object sender, EventArgs e)
         {
-            Program.DbContext.DataSet.Add(task);
-            Program.DbContext.Update<Address>();
+            _selectedNode = null;
+            _parentTask = null;
+            task.Id = -1;
+            AddOrUpdateNewTask(-1);
+            this.trwTasks.RefreshNodes();
+        }
+
+        private void btnTaskSave_Click(object sender, EventArgs e)
+        {
+            if (_selectedNode == null) return;
+            AddOrUpdateNewTask(_parentTask?.Id ?? -1);
+            this.trwTasks.RefreshNodes();
         }
     }
 }
