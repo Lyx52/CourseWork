@@ -127,7 +127,6 @@
             this.Controls.Add(this.lswTasks);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.calSchedule);
-            this.Name = "DashboardComponent";
             this.Size = new System.Drawing.Size(1115, 225);
             this.ResumeLayout(false);
 

@@ -37,7 +37,7 @@ namespace IkMeKursaDarbs
                     Text = "Dashboard",
                     Tag = new List<ComponentTab>
                     {
-                                    new ComponentTab("Dashboard", new DashboardComponent())
+                         new ComponentTab("Dashboard", new DashboardComponent())
                     }
                 });
             if (UserContext.HasAccess(RolePremissionType.MANAGE_USERS))
@@ -48,8 +48,8 @@ namespace IkMeKursaDarbs
                         Text = "User managment",
                         Tag = new List<ComponentTab>
                         {
-                                                    new ComponentTab("Roles", new RoleManagmentComponent()),
-                                                    new ComponentTab("Users", new UserManagmentComponent())
+                            new ComponentTab("Roles", new RoleManagmentComponent()),
+                            new ComponentTab("Users", new UserManagmentComponent())
                         }
                     });
             }
@@ -61,8 +61,8 @@ namespace IkMeKursaDarbs
                         Text = "Mechanic managment",
                         Tag = new List<ComponentTab>
                         {
-                                        new ComponentTab("Mechanics", new MechanicManagmentComponent()),
-                                        new ComponentTab("Specializations", new SpecializationManagmentComponent())
+                            new ComponentTab("Mechanics", new MechanicManagmentComponent()),
+                            new ComponentTab("Specializations", new SpecializationManagmentComponent())
                         }
                     });
             }

@@ -24,6 +24,8 @@ namespace IkMeKursaDarbs.Components
             this.dgwItems.DataSource = Program.DbContext[typeof(InventoryItem).Name];
             this.dgwItems.Columns.Add(EntityRelationComboBoxColumn.Create<InventoryItem, ItemManufacturer>(c => c.Name, "Manufacturer"));
             this.dgwItems.Columns.Add(EntityRelationComboBoxColumn.Create<InventoryItem, InventoryCategory>(c => c.Name, "Category"));
+            this.dgwItems.DataError += DgwItems_DataError;
+            this.dgwItems.ShowCellErrors = true;
             var trw = RecursiveTreeView<InventoryCategory>.Create<InventoryCategory>(c => c.ParentId, c => c.Name);
             trw.Dock = DockStyle.Fill;
             trw.AfterSelect += Category_AfterSelect;
@@ -39,6 +41,12 @@ namespace IkMeKursaDarbs.Components
             this.dgwItems.Columns[3].Visible = false;
             this.dgwItems.Columns[4].Visible = false;
             this.dgwItems.Columns[5].Visible = false;
+        }
+
+        private void DgwItems_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.Cancel = true;
+            return;
         }
 
         private void DgwItems_SelectionChanged(object sender, EventArgs e)
@@ -57,7 +65,24 @@ namespace IkMeKursaDarbs.Components
         private void btnSave_Click(object sender, EventArgs e)
         {
             Program.DbContext.Update<InventoryCategory>();
-            Program.DbContext.Update<InventoryItem>();
+            var itemChanges = Program.DbContext[typeof(InventoryItem).Name].GetChanges();
+            // Stupid fix.
+            if (itemChanges != null)
+            {
+                
+                for (int i = 0; i < itemChanges.Rows.Count; i++)
+                {
+                    var item = itemChanges.Rows[i].GetRowAsType<InventoryItem>();
+                    if (!string.IsNullOrEmpty(item.ItemName) && !string.IsNullOrEmpty(item.PartNumber) && item.CategoryId >= 0)
+                    {
+                        continue;
+                    }
+                    itemChanges.Rows[i].Delete();
+                }
+                Program.DbContext[typeof(InventoryItem).Name].AcceptChanges();
+                Program.DbContext.Update<InventoryItem>();
+            }
+            
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
