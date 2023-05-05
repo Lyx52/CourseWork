@@ -120,6 +120,11 @@ namespace IkMeKursaDarbs
             if (fillDataSet)
                 this.Adapters[typeof(TDataType).Name].Fill(DataSet, typeof(TDataType).Name);
         }
+        public async Task AddRelations<TDataType>() where TDataType : IdEntity
+        {
+            this.DataSet.AddRelations<TDataType>();
+            await this._connection.AddRelations<TDataType>();
+        }
         public void Update(string tableName)
         {
             this.Adapters[tableName].Update(DataSet.Tables[tableName]);

@@ -3,6 +3,7 @@ using Npgsql;
 using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -45,6 +46,30 @@ namespace IkMeKursaDarbs.Data
             }
         }
         public static string GetPostgresTypeStr(Type type) => GetPostgresType(type).ToString();
+        public static async Task AddRelations<TDataType>(this NpgsqlConnection connection) where TDataType : IdEntity
+        {
+            await connection.OpenAsync();
+            using (var command = new NpgsqlCommand())
+            {
+                command.Connection = connection;
+                var tableExists = await connection.TableExists<TDataType>();
+                foreach (var prop in typeof(TDataType).GetProperties())
+                {
+                    var relation = prop.GetCustomAttribute<TableRelationAttribute>();
+                    if (relation != null && tableExists)
+                    {
+                        // Parent->Id related to Child->PropertyName
+                        command.CommandText = $@"ALTER TABLE ""{relation.RelatedTo.Name}""
+                                                 ADD CONSTRAINT ""{relation.RelatedTo.Name}_TO_{typeof(TDataType).Name}""
+                                                 FOREIGN KEY (""Id"") REFERENCES 
+                                                 ""{typeof(TDataType).Name}"" (""{prop.Name}"");";
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+            await connection.CloseAsync();
+        }
+
         public static async Task<NpgsqlDataAdapter> CreateTable<TDataType>(this NpgsqlConnection connection, bool createNewTable = false, CancellationToken cancellationToken = default(CancellationToken)) where TDataType : IdEntity
         {
             await connection.OpenAsync(cancellationToken);
