@@ -35,6 +35,15 @@ namespace IkMeKursaDarbs.Data
 
             throw new ArgumentException($"No Postgres type mapping for type {type}");
         }
+        private static async Task<bool> TableExists<TDataType>(this NpgsqlConnection connection) where TDataType : IdEntity
+        {
+            using (var command = new NpgsqlCommand())
+            {
+                command.Connection = connection;
+                command.CommandText = $"SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = '{typeof(TDataType).Name.ToLower()}')";
+                return (bool)await command.ExecuteScalarAsync();
+            }
+        }
         public static string GetPostgresTypeStr(Type type) => GetPostgresType(type).ToString();
         public static async Task<NpgsqlDataAdapter> CreateTable<TDataType>(this NpgsqlConnection connection, bool createNewTable = false, CancellationToken cancellationToken = default(CancellationToken)) where TDataType : IdEntity
         {
@@ -66,32 +75,22 @@ namespace IkMeKursaDarbs.Data
             string insertQuery = $"INSERT INTO {clazz.Name} ({string.Join(",", columns)}) VALUES ({string.Join(",", columns.Select(col => $"@{col}"))}) RETURNING Id";
             string deleteQuery = $"DELETE FROM {clazz.Name} WHERE Id = @Id";
             string updateQuery = $"UPDATE {clazz.Name} SET {string.Join(",", columns.Select(col => $"{col} = @{col}"))} WHERE Id = @Id RETURNING Id";
+            bool tableExists = await connection.TableExists<TDataType>();
             
-            if (createNewTable)
+            if (createNewTable && tableExists)
             {
-                try
+                using (var dropCmd = new NpgsqlCommand($"DROP TABLE {clazz.Name}", connection))
                 {
-                    using (var dropCmd = new NpgsqlCommand($"DROP TABLE {clazz.Name}", connection))
-                    {
-                        await dropCmd.ExecuteNonQueryAsync(cancellationToken);
-                    }
+                    await dropCmd.ExecuteNonQueryAsync(cancellationToken);
                 }
-                catch (NpgsqlException e)
-                {
-                    Console.WriteLine("Cannot drop table, it does't exist!");
-                }
+                tableExists = false;
             }
-         
-            try
+            if (!tableExists)
             {
                 using (var createCmd = new NpgsqlCommand(createQuery, connection))
                 {
                     await createCmd.ExecuteNonQueryAsync(cancellationToken);
                 }
-            }
-            catch (NpgsqlException e)
-            {
-                Console.WriteLine("Cannot create table it already exists!");
             }
             adapter.DeleteCommand = new NpgsqlCommand(deleteQuery, connection);
             adapter.DeleteCommand.Parameters.Add(new NpgsqlParameter("Id", NpgsqlDbType.Integer, 4, "Id"));
