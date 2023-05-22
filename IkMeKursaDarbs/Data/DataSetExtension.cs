@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.CodeDom;
 using System.Diagnostics;
 using IkMeKursaDarbs.Data.Entities;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace IkMeKursaDarbs.Data
 {
@@ -22,12 +23,12 @@ namespace IkMeKursaDarbs.Data
             if (entityToRemove is null) return;
             entityToRemove.Delete();
         }
-        public static void Update<TDataType>(this DataSet set, TDataType value) where TDataType : IdEntity
+        public static DataRow Update<TDataType>(this DataSet set, TDataType value) where TDataType : IdEntity
         {
             set.EnforceConstraints = false;
             DataTable table = set.Tables[typeof(TDataType).Name];
             DataRow row = table.Select($"Id = {value.Id}").FirstOrDefault();
-            if (row is null) return;
+            if (row is null) return null;
 
             foreach (var prop in typeof(TDataType).GetProperties())
             {
@@ -37,9 +38,10 @@ namespace IkMeKursaDarbs.Data
                 }
             }
             set.EnforceConstraints = true;
+            return row;
         }
 
-        public static void Add<TDataType>(this DataSet set, TDataType value) where TDataType : IdEntity
+        public static DataRow Add<TDataType>(this DataSet set, TDataType value) where TDataType : IdEntity
         {
             set.EnforceConstraints = false;
             DataRow row = set.Tables[typeof(TDataType).Name].NewRow();
@@ -50,6 +52,7 @@ namespace IkMeKursaDarbs.Data
             
             set.Tables[typeof(TDataType).Name].Rows.Add(row);
             set.EnforceConstraints = true;
+            return row;
         }
         public static void AddOrUpdate<TDataType>(this DataSet set, TDataType value) where TDataType : IdEntity
         {

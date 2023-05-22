@@ -1,4 +1,5 @@
-﻿using IkMeKursaDarbs.Data;
+﻿using DocumentFormat.OpenXml.Office.PowerPoint.Y2021.M06.Main;
+using IkMeKursaDarbs.Data;
 using IkMeKursaDarbs.Data.Entities;
 using IkMeKursaDarbs.Data.Enums;
 using System;
@@ -13,6 +14,7 @@ namespace IkMeKursaDarbs
     public static class UserContext
     {
         public static Action OnLoggedIn { get; set; }
+        public static Action OnLoggedOut { get; set; }
         public static AppUser CurrentUser
         {
             get => _currentUser;
@@ -34,11 +36,15 @@ namespace IkMeKursaDarbs
             _userRole = Program.DbContext.DataSet.Query<UserRole>(r => r.Id == _currentUser.RoleId).FirstOrDefault();
             OnLoggedIn.Invoke();
         }
-        public static void Logout() => _currentUser = null;
+        public static void Logout()
+        {
+            _currentUser = null;
+            OnLoggedOut?.Invoke();
+        }
         public static bool IsAuthenticated() => CurrentUser != null && _userRole != null;
         public static bool HasAccess(RolePremissionType premission)
         {
-            return IsAuthenticated() && (_userRole.Premissions & (int)RolePremissionType.MANAGE_USERS) == (int)RolePremissionType.MANAGE_USERS;
+            return IsAuthenticated() && (_userRole.Premissions & (int)premission) == (int)premission;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace IkMeKursaDarbs
         static void Main()
         {
             DbContext = new DbContext();
-            DbContext.Initialize().Wait();
+            DbContext.Initialize(false).Wait();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainWindow());

@@ -101,11 +101,12 @@ namespace IkMeKursaDarbs
                 if (mechSpec != null)
                 {
                     var mechanic = mechanics.FirstOrDefault(m => m.Id == mechSpec.MechanicId);
-                    worksheet.Cell(i + 2, 7).Value = mechanic is null ? string.Empty : $"{mechanic.Name} {mechanic.Surname}";
-                    worksheet.Cell(i + 2, 8).Value = specs.FirstOrDefault(s => s.Id == mechSpec.SpecializationId)?.Name ?? string.Empty;
+                    worksheet.Cell(i + 3, 7).Value = mechanic is null ? string.Empty : $"{mechanic.Name} {mechanic.Surname}";
+                    worksheet.Cell(i + 3, 8).Value = specs.FirstOrDefault(s => s.Id == mechSpec.SpecializationId)?.Name ?? string.Empty;
                 }
                 var vehicle = vehicles.FirstOrDefault(v => v.Id == tasks[i].VehicleId);
-                worksheet.Cell(i + 2, 9).Value = vehicle is null ? string.Empty : $"{vehicle.Brand} {vehicle.Model} {vehicle.VinNumber}";
+                worksheet.Cell(i + 3, 9).Value = vehicle is null ? string.Empty : $"{vehicle.Brand} {vehicle.Model} {vehicle.VinNumber}";
+                worksheet.Cell(i + 3, 10).Value = vehicle is null ? string.Empty : $"{vehicle.VinNumber}";
                 worksheet.Columns().AdjustToContents();
                 // Save to file
                 workbook.SaveAs($"./Reports/{reportName}.xlsx");

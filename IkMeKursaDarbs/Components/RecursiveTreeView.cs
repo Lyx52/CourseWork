@@ -16,7 +16,7 @@ namespace IkMeKursaDarbs.Components
         private string _parentColumn;
         private string _displayMember;
         private string _entityName;
-
+        public string queryFilter = string.Empty;
         public RecursiveTreeView(string entityName, string parentColumn, string displayMember)
         {
             _parentColumn = parentColumn;
@@ -47,7 +47,7 @@ namespace IkMeKursaDarbs.Components
 
         private void PopulateNodes(int parentId, TreeNodeCollection nodes)
         {
-            DataRow[] childRows = Program.DbContext[_entityName].Select($"{_parentColumn} = '{parentId}'");
+            DataRow[] childRows = Program.DbContext[_entityName].Select($"{_parentColumn} = '{parentId}' {(string.IsNullOrEmpty(queryFilter) ? string.Empty : $" AND {queryFilter}")}");
 
             // Add each child row as a new node
             foreach (DataRow row in childRows)

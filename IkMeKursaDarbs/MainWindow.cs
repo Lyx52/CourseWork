@@ -21,6 +21,7 @@ namespace IkMeKursaDarbs
         {
             InitializeComponent();
             UserContext.OnLoggedIn += OnLoggedIn;
+            UserContext.OnLoggedOut += OnLoggedOut;
         }
         public void OnLoggedIn()
         {
@@ -31,6 +32,7 @@ namespace IkMeKursaDarbs
         public void AddMenuOptions()
         {
             // Noklusēti viesiem lietotājiem ir dashboard
+            lstMainMenu.Items.Clear();
             lstMainMenu.Items.Add(
                 new ListViewItem
                 {
@@ -81,11 +83,10 @@ namespace IkMeKursaDarbs
             }
             
         }
-        public void Logout()
+        public void OnLoggedOut()
         {
             this.mainContainer.Enabled = false;
             this.mainContainer.Visible = false;
-            UserContext.Logout();
             UserContext.LoginPrompt(this);
         }
         private void MainWindow_Load(object sender, EventArgs e)

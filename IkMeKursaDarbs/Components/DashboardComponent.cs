@@ -45,14 +45,14 @@ namespace IkMeKursaDarbs.Components
                 item.Tag = task;
                 lswTasks.Items.Add(item);
             }
-            this.Invalidate();
-            this.Refresh();
         }
         private List<MechanicTask> GetMechanicTasks()
         {
            if (!UserContext.IsAuthenticated()) return new List<MechanicTask>();
 
             var mechanic = Program.DbContext.DataSet.Query<Mechanic>(m => m.UserId == UserContext.CurrentUser.Id).FirstOrDefault();
+            if (mechanic is null) return new List<MechanicTask>();
+
             var mechanicSpecs = Program.DbContext.DataSet.Query<MechanicSpecialization>(ms => ms.MechanicId == mechanic.Id).Select(ms => ms.Id);
 
             return Program.DbContext.DataSet.Query<MechanicTask>(mt => mechanicSpecs.Contains(mt.MechSpecId)).ToList();
@@ -67,7 +67,7 @@ namespace IkMeKursaDarbs.Components
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            
+            UserContext.Logout();
         }
 
         private void btnMarkAsComplete_Click(object sender, EventArgs e)

@@ -79,7 +79,6 @@ namespace IkMeKursaDarbs.Components
                     }
                     itemChanges.Rows[i].Delete();
                 }
-                Program.DbContext[typeof(InventoryItem).Name].AcceptChanges();
                 Program.DbContext.Update<InventoryItem>();
             }
             

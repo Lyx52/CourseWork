@@ -36,21 +36,24 @@ namespace IkMeKursaDarbs.Components
         private void btnSave_Click(object sender, EventArgs e)
         {
             Program.DbContext.Update<Mechanic>();
-            var mechSpec = Program.DbContext.DataSet.Query<MechanicSpecialization>(ms => ms.MechanicId == _selectedMechanic.Id).ToList();
-            for (var i = 0; i < cblSpecializations.Items.Count; i++)
+            if (_selectedMechanic != null)
             {
-                var spec = (cblSpecializations.Items[i] as DataRowView).Row.GetRowAsType<Specialization>();
-                var tableMechSpec = mechSpec.FirstOrDefault(ms => ms.MechanicId == _selectedMechanic.Id && ms.SpecializationId == spec.Id);
-                if (cblSpecializations.GetItemChecked(i) && tableMechSpec is null)
+                var mechSpec = Program.DbContext.DataSet.Query<MechanicSpecialization>(ms => ms.MechanicId == _selectedMechanic.Id).ToList();
+                for (var i = 0; i < cblSpecializations.Items.Count; i++)
                 {
-                    Program.DbContext.DataSet.Add(new MechanicSpecialization() { SpecializationId = spec.Id, MechanicId = _selectedMechanic.Id });
-                } 
-                else if (!cblSpecializations.GetItemChecked(i) && tableMechSpec != null)
-                {
-                    Program.DbContext.DataSet.Remove(tableMechSpec);
+                    var spec = (cblSpecializations.Items[i] as DataRowView).Row.GetRowAsType<Specialization>();
+                    var tableMechSpec = mechSpec.FirstOrDefault(ms => ms.MechanicId == _selectedMechanic.Id && ms.SpecializationId == spec.Id);
+                    if (cblSpecializations.GetItemChecked(i) && tableMechSpec is null)
+                    {
+                        Program.DbContext.DataSet.Add(new MechanicSpecialization() { SpecializationId = spec.Id, MechanicId = _selectedMechanic.Id });
+                    }
+                    else if (!cblSpecializations.GetItemChecked(i) && tableMechSpec != null)
+                    {
+                        Program.DbContext.DataSet.Remove(tableMechSpec);
+                    }
                 }
+                Program.DbContext.Update<MechanicSpecialization>();
             }
-            Program.DbContext.Update<MechanicSpecialization>();
             UpdateSpecializations();
         }
 

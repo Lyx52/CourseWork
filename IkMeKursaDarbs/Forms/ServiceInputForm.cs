@@ -33,6 +33,8 @@ namespace IkMeKursaDarbs.Forms
         private bool IsServicePageEnabled = false;
         private int SelectedCustomer = -1;
         private int SelectedVehicle = -1;
+        private bool isUpdatingVehicle = false;
+        private bool isUpdatingCustomer = false;
         private MechanicTask _parentTask = null;
         private TreeNode _selectedNode = null;
         private RecursiveTreeView<MechanicTask> trwTasks;
@@ -122,7 +124,7 @@ namespace IkMeKursaDarbs.Forms
         private void TrwTasks_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Node == null) return;
-            var selectedTask = (e.Node.Tag as DataRow).GetRowAsType<MechanicTask>();
+                var selectedTask = (e.Node.Tag as DataRow).GetRowAsType<MechanicTask>();
 
             txtTaskName.Text = selectedTask.Name;
             txtTaskDescription.Text = selectedTask.Description;
@@ -166,13 +168,15 @@ namespace IkMeKursaDarbs.Forms
                 customerCity = Program.DbContext.DataSet.Query<City>(a => a.Id == customerAddress?.CityId).FirstOrDefault();
                 customerCountry = Program.DbContext.DataSet.Query<Country>(a => a.Id == customerCity?.CountryId).FirstOrDefault();
                 txtCustomerStreet.Text = customerAddress?.Street ?? string.Empty;
-                SelectByPrimaryKey(cbxCustomerCountry, customerCountry.Id);
-                SelectByPrimaryKey(cbxCustomerCity, customerCity.Id);
+                if (customerCountry != null) SelectByPrimaryKey(cbxCustomerCountry, customerCountry.Id);
+                if (customerCity != null) SelectByPrimaryKey(cbxCustomerCity, customerCity.Id);
+                if (customerAddress is null) customerAddress = new Address();
             }
             SelectedCustomer = cbxCustomerSearch.SelectedIndex;
             customer = rowCustomer;
 
             btnCreateOrUpdateCustomer.Text = "Update customer";
+            isUpdatingCustomer = true;
         }
         private void SelectByPrimaryKey(System.Windows.Forms.ComboBox cbox, int pk)
         {
@@ -211,6 +215,9 @@ namespace IkMeKursaDarbs.Forms
                 ShowValidationError("Country not selected!");
                 return;
             }
+
+            customerCity = (cbxCustomerCity.SelectedItem as DataRowView).Row.GetRowAsType<City>();
+            customerCountry = (cbxCustomerCountry.SelectedItem as DataRowView).Row.GetRowAsType<Country>();
             customerAddress.CityId = customerCity.Id;
             customerAddress.Street = txtCustomerStreet.Text;
 
@@ -223,27 +230,36 @@ namespace IkMeKursaDarbs.Forms
             if (ValidateProperty<Customer>(customer, c => c.Name)) return;
             if (ValidateProperty<Customer>(customer, c => c.PhoneNumber)) return;
             if (ValidateProperty<Customer>(customer, c => c.Email)) return;
-            
+            var address = Program.DbContext.DataSet.Query<Address>(a => a.Id == customerAddress.Id).FirstOrDefault();
+            customerAddress.Id = address?.Id ?? 0;
+
             // Add address if it has pk
             if (customerAddress.Id <= 0)
             {
-                Program.DbContext.DataSet.Add<Address>(customerAddress);
+                var row = Program.DbContext.DataSet.Add<Address>(customerAddress);
                 Program.DbContext.Update<Address>();
-            }
-
-
-            if (customerAddress.Id <= 0)
+                customerAddress = row.GetRowAsType<Address>();
+            } else
             {
-                Program.DbContext.DataSet.Add<Customer>(customer);
-                Program.DbContext.Update<Customer>();
+                // Update
+                var row = Program.DbContext.DataSet.Update<Address>(customerAddress);
+                Program.DbContext.Update<Address>();
+                customerAddress = row.GetRowAsType<Address>();
             }
-
-            // Update
-            Program.DbContext.DataSet.Update<Address>(customerAddress);
-            Program.DbContext.Update<Address>();
-            customer.AddressId = customerAddress.Id;
-            Program.DbContext.DataSet.Update<Customer>(customer);
-            Program.DbContext.Update<Customer>();
+                
+            customer.AddressId = customerAddress?.Id ?? 0;
+            if (isUpdatingCustomer)
+            {
+                var row = Program.DbContext.DataSet.Update<Customer>(customer);
+                Program.DbContext.Update<Customer>();
+                customer = row.GetRowAsType<Customer>();
+            } else
+            {
+                var row = Program.DbContext.DataSet.Add<Customer>(customer);
+                Program.DbContext.Update<Customer>();
+                customer = row.GetRowAsType<Customer>();
+            }
+            
             UpdateNamesAndSurnamesColumn();
             cbxCustomerSearch.SelectedIndex = SelectedCustomer < 0 ? cbxCustomerSearch.Items.Count - 1 : SelectedCustomer;
             IsVehPageEnabled = true;
@@ -306,18 +322,6 @@ namespace IkMeKursaDarbs.Forms
             }
         }
 
-        private void cbxCustomerCountry_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cbxCustomerCountry.SelectedItem is null) return;
-            customerCountry = (cbxCustomerCountry.SelectedItem as DataRowView).Row.GetRowAsType<Country>();
-        }
-
-        private void cbxCustomerCity_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cbxCustomerCity.SelectedItem is null) return;
-            customerCity = (cbxCustomerCity.SelectedItem as DataRowView).Row.GetRowAsType<City>();
-        }
-
         private void btnAddVeh_Click(object sender, EventArgs e)
         {
             if(cbxVinSearch.SelectedItem is null) return;
@@ -328,6 +332,7 @@ namespace IkMeKursaDarbs.Forms
             customerVehicle = vehInfo;
             SelectedVehicle = cbxVinSearch.SelectedIndex;
             btnCreateOrUpdateVeh.Text = "Update vehicle";
+            isUpdatingVehicle = true;
         }
 
         private void btnCreateOrUpdateVeh_Click(object sender, EventArgs e)
@@ -337,18 +342,24 @@ namespace IkMeKursaDarbs.Forms
             if (ValidateProperty<Vehicle>(customerVehicle, v => v.VinNumber)) return;
             if (ValidateProperty<Vehicle>(customerVehicle, v => v.Brand)) return;
 
+            customerVehicle.OwnerId = customer?.Id ?? 0;
 
             // Add vehicle if it has pk
-            if (customerVehicle.Id <= 0)
+            if (isUpdatingVehicle)
             {
-                Program.DbContext.DataSet.Add<Vehicle>(customerVehicle);
+                // Update
+                var row = Program.DbContext.DataSet.Update<Vehicle>(customerVehicle);
                 Program.DbContext.Update<Vehicle>();
+                customerVehicle = row.GetRowAsType<Vehicle>();
+            } else
+            {
+                var row = Program.DbContext.DataSet.Add<Vehicle>(customerVehicle);
+                Program.DbContext.Update<Vehicle>();
+                customerVehicle = row.GetRowAsType<Vehicle>();
             }
 
-            // Update
-            customerVehicle.OwnerId = customer.Id;
-            Program.DbContext.DataSet.Update<Vehicle>(customerVehicle);
-            Program.DbContext.Update<Vehicle>();
+            this.trwTasks.queryFilter = $" VehicleId = '{customerVehicle.Id}'";
+            this.trwTasks.RefreshNodes();
             UpdateNamesAndSurnamesColumn();
             cbxVinSearch.SelectedIndex = SelectedVehicle < 0 ? cbxVinSearch.Items.Count - 1 : SelectedVehicle;
             IsServicePageEnabled = true;
@@ -368,6 +379,7 @@ namespace IkMeKursaDarbs.Forms
             cbxCustomerCountry.SelectedIndex = -1;
             cbxCustomerCity.SelectedIndex = -1;
             btnCreateOrUpdateCustomer.Text = "Create customer";
+            isUpdatingCustomer = false;
         }
 
         private void btnRemoveVeh_Click(object sender, EventArgs e)
@@ -379,6 +391,7 @@ namespace IkMeKursaDarbs.Forms
             txtVehicleModel.Text = string.Empty;
             txtVehicleVin.Text = string.Empty;
             btnCreateOrUpdateVeh.Text = "Create vehicle";
+            isUpdatingVehicle = false;
         }
         private void AddOrUpdateNewTask(int parentId)
         {
@@ -392,6 +405,7 @@ namespace IkMeKursaDarbs.Forms
                 ShowValidationError("Mechanic not selected!");
                 return;
             }
+
             var spec = (cbxTaskSpec.SelectedItem as DataRowView).Row.GetRowAsType<Specialization>();
             var mechanic = (cbxTaskMechanic.SelectedItem as DataRowView).Row.GetRowAsType<Mechanic>();
             var mechSpec = Program.DbContext.DataSet.Query<MechanicSpecialization>(ms => ms.MechanicId == mechanic.Id && ms.SpecializationId == spec.Id).FirstOrDefault();
@@ -442,6 +456,13 @@ namespace IkMeKursaDarbs.Forms
             if (_selectedNode == null) return;
             AddOrUpdateNewTask(_parentTask?.Id ?? -1);
             this.trwTasks.RefreshNodes();
+        }
+
+        private void btnDeleteCustomer_Click(object sender, EventArgs e)
+        {
+            if (customer is null) return;
+            Program.DbContext.DataSet.Remove<Customer>(customer);
+            Program.DbContext.Update<Customer>();
         }
     }
 }

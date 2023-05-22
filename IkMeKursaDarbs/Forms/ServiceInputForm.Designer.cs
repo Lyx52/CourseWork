@@ -30,6 +30,7 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabCustomer = new System.Windows.Forms.TabPage();
+            this.btnDeleteCustomer = new System.Windows.Forms.Button();
             this.btnRemoveCustomer = new System.Windows.Forms.Button();
             this.cbxCustomerSearch = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -64,6 +65,7 @@
             this.txtVehicleVin = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.tabService = new System.Windows.Forms.TabPage();
+            this.lblNodeName = new System.Windows.Forms.Label();
             this.trwPanel = new System.Windows.Forms.Panel();
             this.btnTaskSave = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -79,7 +81,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.btnAddNewTask = new System.Windows.Forms.Button();
             this.directoryEntry1 = new System.DirectoryServices.DirectoryEntry();
-            this.lblNodeName = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabCustomer.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -104,6 +105,7 @@
             // 
             // tabCustomer
             // 
+            this.tabCustomer.Controls.Add(this.btnDeleteCustomer);
             this.tabCustomer.Controls.Add(this.btnRemoveCustomer);
             this.tabCustomer.Controls.Add(this.cbxCustomerSearch);
             this.tabCustomer.Controls.Add(this.groupBox1);
@@ -116,6 +118,16 @@
             this.tabCustomer.TabIndex = 0;
             this.tabCustomer.Text = "Customer info";
             this.tabCustomer.UseVisualStyleBackColor = true;
+            // 
+            // btnDeleteCustomer
+            // 
+            this.btnDeleteCustomer.Location = new System.Drawing.Point(417, 33);
+            this.btnDeleteCustomer.Name = "btnDeleteCustomer";
+            this.btnDeleteCustomer.Size = new System.Drawing.Size(75, 23);
+            this.btnDeleteCustomer.TabIndex = 25;
+            this.btnDeleteCustomer.Text = "Delete";
+            this.btnDeleteCustomer.UseVisualStyleBackColor = true;
+            this.btnDeleteCustomer.Click += new System.EventHandler(this.btnDeleteCustomer_Click);
             // 
             // btnRemoveCustomer
             // 
@@ -174,7 +186,7 @@
             this.btnCreateOrUpdateCustomer.Name = "btnCreateOrUpdateCustomer";
             this.btnCreateOrUpdateCustomer.Size = new System.Drawing.Size(127, 23);
             this.btnCreateOrUpdateCustomer.TabIndex = 7;
-            this.btnCreateOrUpdateCustomer.Text = "Create vehicle";
+            this.btnCreateOrUpdateCustomer.Text = "Create customer";
             this.btnCreateOrUpdateCustomer.UseVisualStyleBackColor = true;
             this.btnCreateOrUpdateCustomer.Click += new System.EventHandler(this.btnCreateOrUpdate_Click);
             // 
@@ -187,7 +199,6 @@
             this.cbxCustomerCity.Name = "cbxCustomerCity";
             this.cbxCustomerCity.Size = new System.Drawing.Size(196, 24);
             this.cbxCustomerCity.TabIndex = 22;
-            this.cbxCustomerCity.SelectedIndexChanged += new System.EventHandler(this.cbxCustomerCity_SelectedIndexChanged);
             this.cbxCustomerCity.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cbxCustomerCity_KeyDown);
             // 
             // cbxCustomerCountry
@@ -199,7 +210,6 @@
             this.cbxCustomerCountry.Name = "cbxCustomerCountry";
             this.cbxCustomerCountry.Size = new System.Drawing.Size(196, 24);
             this.cbxCustomerCountry.TabIndex = 21;
-            this.cbxCustomerCountry.SelectedIndexChanged += new System.EventHandler(this.cbxCustomerCountry_SelectedIndexChanged);
             this.cbxCustomerCountry.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cbxCustomerCountry_KeyDown);
             // 
             // label8
@@ -468,6 +478,14 @@
             this.tabService.Text = "Service tasks";
             this.tabService.UseVisualStyleBackColor = true;
             // 
+            // lblNodeName
+            // 
+            this.lblNodeName.AutoSize = true;
+            this.lblNodeName.Location = new System.Drawing.Point(361, 15);
+            this.lblNodeName.Name = "lblNodeName";
+            this.lblNodeName.Size = new System.Drawing.Size(0, 17);
+            this.lblNodeName.TabIndex = 5;
+            // 
             // trwPanel
             // 
             this.trwPanel.Location = new System.Drawing.Point(3, 6);
@@ -606,14 +624,6 @@
             this.btnAddNewTask.UseVisualStyleBackColor = true;
             this.btnAddNewTask.Click += new System.EventHandler(this.btnAddNew_Click);
             // 
-            // lblNodeName
-            // 
-            this.lblNodeName.AutoSize = true;
-            this.lblNodeName.Location = new System.Drawing.Point(361, 15);
-            this.lblNodeName.Name = "lblNodeName";
-            this.lblNodeName.Size = new System.Drawing.Size(0, 17);
-            this.lblNodeName.TabIndex = 5;
-            // 
             // ServiceInputForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -693,5 +703,6 @@
         private System.Windows.Forms.ComboBox cbxTaskMechanic;
         private System.Windows.Forms.ComboBox cbxTaskSpec;
         private System.Windows.Forms.Label lblNodeName;
+        private System.Windows.Forms.Button btnDeleteCustomer;
     }
 }

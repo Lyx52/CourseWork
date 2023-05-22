@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using IkMeKursaDarbs.Data.Enums;
+using System.Windows.Forms;
+
 namespace IkMeKursaDarbs
 {
     
@@ -32,23 +34,23 @@ namespace IkMeKursaDarbs
             DataSet = new DataSet();
             Adapters = new Dictionary<string, NpgsqlDataAdapter>();
         }
-        public async Task Initialize(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task Initialize(bool rebuildTables = true, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Izveidojam tabulas
-            await this.CreateSchema<Country>(true, true, cancellationToken);
-            await this.CreateSchema<City>(true, true, cancellationToken);
-            await this.CreateSchema<Address>(true, true, cancellationToken);
-            await this.CreateSchema<AppUser>(true, true, cancellationToken);
-            await this.CreateSchema<UserRole>(true, true, cancellationToken);
-            await this.CreateSchema<Specialization>(true, true, cancellationToken);
-            await this.CreateSchema<MechanicSpecialization>(true, true, cancellationToken);
-            await this.CreateSchema<Mechanic>(true, true, cancellationToken);
-            await this.CreateSchema<InventoryCategory>(true, true, cancellationToken);
-            await this.CreateSchema<InventoryItem>(true, true, cancellationToken);
-            await this.CreateSchema<ItemManufacturer>(true, true, cancellationToken);
-            await this.CreateSchema<Vehicle>(true, true, cancellationToken);
-            await this.CreateSchema<MechanicTask>(true, true, cancellationToken);
-            await this.CreateSchema<Customer>(true, true, cancellationToken);
+            await this.CreateSchema<Country>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<City>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<Address>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<AppUser>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<UserRole>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<Specialization>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<MechanicSpecialization>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<Mechanic>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<InventoryCategory>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<InventoryItem>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<ItemManufacturer>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<Vehicle>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<MechanicTask>(true, rebuildTables, cancellationToken);
+            await this.CreateSchema<Customer>(true, rebuildTables, cancellationToken);
 
             // Izveidojam relacijas
             this.DataSet.AddRelations<AppUser>();
@@ -71,9 +73,7 @@ namespace IkMeKursaDarbs
             {
                 var role = this.DataSet.Select<UserRole>("RoleName = 'Administrator'").FirstOrDefault();
                 this.DataSet.Add(new AppUser() { Password = "parole123".ToSHA256(), Username = "admin", RoleId = role.Id });
-                this.DataSet.Add(new AppUser() { Password = "parole123".ToSHA256(), Username = "tester", RoleId = role.Id });
                 this.Update<AppUser>();
-                this.DataSet.Select<AppUser>("Username = 'admin'").Count();
             }
 
             // Izveidot noklusēto noliktavas kategoriju, ja tāda neēksistē (-1 Ir root kategorija)
@@ -82,35 +82,6 @@ namespace IkMeKursaDarbs
                 this.DataSet.Add(new InventoryCategory() { Name = "Parts", ParentId = -1 });
                 this.Update<InventoryCategory>();
             }
-
-            this.DataSet.Add(new Country() { Name = "Latvia" });
-            this.DataSet.Add(new Country() { Name = "Germany" });
-            this.Update<Country>();
-            this.DataSet.Add(new City() { Name = "Jelgava", CountryId = this.DataSet.Query<Country>(c => c.Name == "Latvia").First().Id });
-            this.DataSet.Add(new City() { Name = "Berlin", CountryId = this.DataSet.Query<Country>(c => c.Name == "Germany").First().Id });
-            this.DataSet.Add(new City() { Name = "Bremen", CountryId = this.DataSet.Query<Country>(c => c.Name == "Germany").First().Id });
-            this.Update<City>();
-            this.DataSet.Add(new Address() { Street = "Street1", CityId = this.DataSet.Query<City>(c => c.Name == "Bremen").First().Id });
-            this.Update<Address>();
-            this.DataSet.Add(new Customer() { Name = "Name1", Surname = "Surname1", AddressId = this.DataSet.Query<Address>(c => c.Street == "Street1").First().Id, Email = "test@test.com", PhoneNumber = "+37123232323" });
-            this.DataSet.Add(new Customer() { Name = "Name2", Surname = "Surname2", AddressId = this.DataSet.Query<Address>(c => c.Street == "Street1").First().Id, Email = "test@test.com", PhoneNumber = "+37123232323" });
-            
-            this.Update<Customer>();
-            this.DataSet.Add(new Vehicle() { VinNumber = "1234", Brand = "BMW", Model = "520i", OwnerId = this.DataSet.Query<Customer>(c => c.Name == "Name1" && c.Surname == "Surname1").First().Id });
-            this.DataSet.Add(new Vehicle() { VinNumber = "5678", Brand = "BMW", Model = "530i", OwnerId = this.DataSet.Query<Customer>(c => c.Name == "Name1" && c.Surname == "Surname1").First().Id });
-            this.DataSet.Add(new Vehicle() { VinNumber = "1111", Brand = "BMW", Model = "520i", OwnerId = this.DataSet.Query<Customer>(c => c.Name == "Name2" && c.Surname == "Surname2").First().Id });
-            this.Update<Vehicle>();
-
-            this.DataSet.Add(new Specialization() { Name = "TestSpec" });
-            this.DataSet.Add(new Specialization() { Name = "TestSpec2" });
-            this.Update<Specialization>();
-            this.DataSet.Add(new Mechanic() { Name = "Name1", Surname = "Surname1", UserId = this.DataSet.Query<AppUser>(c => c.Username == "admin").First().Id });
-            this.DataSet.Add(new Mechanic() { Name = "Name2", Surname = "Surname2", UserId = this.DataSet.Query<AppUser>(c => c.Username == "admin").First().Id });
-            this.Update<Mechanic>();
-            this.DataSet.Add(new MechanicSpecialization() { SpecializationId = this.DataSet.Query<Specialization>(c => c.Name == "TestSpec").First().Id, MechanicId = this.DataSet.Query<Mechanic>(c => c.Name == "Name1").First().Id });
-            this.DataSet.Add(new MechanicSpecialization() { SpecializationId = this.DataSet.Query<Specialization>(c => c.Name == "TestSpec2").First().Id, MechanicId = this.DataSet.Query<Mechanic>(c => c.Name == "Name1").First().Id });
-            this.DataSet.Add(new MechanicSpecialization() { SpecializationId = this.DataSet.Query<Specialization>(c => c.Name == "TestSpec2").First().Id, MechanicId = this.DataSet.Query<Mechanic>(c => c.Name == "Name2").First().Id });
-            this.Update<MechanicSpecialization>();
         }
         public async Task CreateSchema<TDataType>(bool fillDataSet, bool createNewTable = false, CancellationToken cancellationToken = default(CancellationToken)) where TDataType : IdEntity
         {
@@ -120,14 +91,16 @@ namespace IkMeKursaDarbs
             if (fillDataSet)
                 this.Adapters[typeof(TDataType).Name].Fill(DataSet, typeof(TDataType).Name);
         }
-        public async Task AddRelations<TDataType>() where TDataType : IdEntity
-        {
-            this.DataSet.AddRelations<TDataType>();
-            await this._connection.AddRelations<TDataType>();
-        }
         public void Update(string tableName)
         {
-            this.Adapters[tableName].Update(DataSet.Tables[tableName]);
+            try
+            {
+                this.Adapters[tableName].Update(DataSet.Tables[tableName]);
+            } catch (Exception e)
+            {
+                MessageBox.Show("Failed to save!", "Saving error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DataSet.Tables[tableName].RejectChanges();
+            }
         }
         public void Update<TDataType>() where TDataType : IdEntity => Update(typeof(TDataType).Name);
     }
